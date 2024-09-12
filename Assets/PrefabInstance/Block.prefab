@@ -17463,10 +17463,11 @@ MonoBehaviour:
   textLv: {fileID: 6750203979252152155}
   textDamage: {fileID: 2764410013108724507}
   textPriceUpgrade: {fileID: 8300867581836072105}
-  frameButton: {fileID: 1911217367795741502}
+  frameUpgrade: {fileID: 1911217367795741502}
+  frameLastUpgrade: {fileID: 2879091094153050457}
   textMax: {fileID: 8348724246212844116}
-  textUpgrade: {fileID: 1785713905897254748}
-  buttontUpgrade: {fileID: 6468790569624079494}
+  textLastUpgrade: {fileID: 1785713905897254748}
+  lastUpgrade: {fileID: 6468790569624079494}
   boxProgress:
   - {fileID: 5251600057377863902}
   - {fileID: 6921016930792136825}
@@ -17724,7 +17725,7 @@ GameObject:
   - component: {fileID: 8660473061420019425}
   - component: {fileID: 2879091094153050457}
   m_Layer: 5
-  m_Name: TextUpgrade
+  m_Name: LastUpgrade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

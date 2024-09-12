@@ -3480,6 +3480,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 68cf531fcf369f2458271424698a40ae, type: 2}
   - {fileID: 21300000, guid: b70276835b24abe4d9d9db0f1ab9f881, type: 2}
   - {fileID: 21300000, guid: 59fadd17b726edd45812aedcadc21a1d, type: 2}
+  frameButtonWeaponLastUpgradees:
+  - {fileID: 21300000, guid: d46a2ddae4736e3488293274da2c4618, type: 2}
+  - {fileID: 21300000, guid: f351ffe0af5425b4ebbe81a874abdccc, type: 2}
 --- !u!1 &1972759679
 GameObject:
   m_ObjectHideFlags: 0
@@ -3585,7 +3588,7 @@ MonoBehaviour:
     price: 0
   playerData:
     blockLevel: 0
-    weaponName: 
+    weaponType: 0
     weaponLevel: 0
     weaponLevelUpgrade: 0
 --- !u!1 &2021822140

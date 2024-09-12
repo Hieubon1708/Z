@@ -11,11 +11,12 @@ public class UIHandler : MonoBehaviour
 
     public Sprite[] frameButtonBlockUpgradees;
     public Sprite[] frameButtonWeaponUpgradees;
+    public Sprite[] frameButtonWeaponLastUpgradees;
 
     public void Awake()
     {
         instance = this;
-        PlayerPrefs.SetInt("Gold", 2222);
+        PlayerPrefs.SetInt("Gold", 0);
     }
 
     public enum Type
@@ -23,39 +24,46 @@ public class UIHandler : MonoBehaviour
         ENOUGH_MONEY, NOT_ENOUGH_MONEY
     }
 
-    public void ChangeSpriteWeaponBuyer(Type type, Image frameButton, Image frameGold)
+    public void ChangeSpriteWeaponBuyer(Type type, Image frame, Image frameGold)
     {
         int index = 0;
         if (type == Type.NOT_ENOUGH_MONEY) index = 1;
-        frameButton.sprite = frameButtonWeaponBuyers[index];
+        frame.sprite = frameButtonWeaponBuyers[index];
         frameGold.sprite = frameGoldWeaponBuyers[index];
     }
     
-    public void ChangeSpriteWeaponUpgradee(Type type, Image frameButton)
+    public void ChangeSpriteWeaponUpgradee(Type type, Image frame)
     {
         int index = 0;
         if (type == Type.NOT_ENOUGH_MONEY) index = 1;
-        frameButton.sprite = frameButtonWeaponUpgradees[index];
+        frame.sprite = frameButtonWeaponUpgradees[index];
     }
-
-    public void ChangeSpriteWeaponUpgradee(Image frameButton, TextMeshProUGUI textPrice, TextMeshProUGUI textMax)
-    {
-        textPrice.gameObject.SetActive(false);
-        textMax.gameObject.SetActive(true);
-        frameButton.sprite = frameButtonWeaponUpgradees[2];
-    }
-
-    public void ChangeSpriteBlockUpgradee(Image frameButton, TextMeshProUGUI textPrice, TextMeshProUGUI textMax)
-    {
-        textPrice.gameObject.SetActive(false);
-        textMax.gameObject.SetActive(true);
-        frameButton.sprite = frameButtonBlockUpgradees[2];
-    }
-
-    public void ChangeSpriteBlockUpgradee(Type type, Image frameButton)
+    
+    public void ChangeSpriteWeaponLastUpgradee(Type type, Image frame)
     {
         int index = 0;
         if (type == Type.NOT_ENOUGH_MONEY) index = 1;
-        frameButton.sprite = frameButtonBlockUpgradees[index];
+        frame.sprite = frameButtonWeaponLastUpgradees[index];
+    }
+
+    public void ChangeSpriteWeaponUpgradee(Image frame, TextMeshProUGUI textPrice, TextMeshProUGUI textMax)
+    {
+        textPrice.gameObject.SetActive(false);
+        textMax.gameObject.SetActive(true);
+        frame.sprite = frameButtonWeaponUpgradees[2];
+    }
+
+    public void ChangeSpriteBlockUpgradee(Image frame, TextMeshProUGUI textPrice, TextMeshProUGUI textMax)
+    {
+        textPrice.gameObject.SetActive(false);
+        textMax.gameObject.SetActive(true);
+        frame.sprite = frameButtonBlockUpgradees[2];
+    }
+
+    public void ChangeSpriteBlockUpgradee(Type type, Image frame)
+    {
+        int index = 0;
+        if (type == Type.NOT_ENOUGH_MONEY) index = 1;
+        frame.sprite = frameButtonBlockUpgradees[index];
     }
 }

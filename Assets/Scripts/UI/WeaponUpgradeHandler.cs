@@ -9,10 +9,11 @@ public class WeaponUpgradeHandler : MonoBehaviour
     public TextMeshProUGUI textLv;
     public TextMeshProUGUI textDamage;
     public TextMeshProUGUI textPriceUpgrade;
-    public Image frameButton;
+    public Image frameUpgrade;
+    public Image frameLastUpgrade;
     public TextMeshProUGUI textMax;
-    public TextMeshProUGUI textUpgrade;
-    public GameObject buttontUpgrade;
+    public TextMeshProUGUI textLastUpgrade;
+    public GameObject lastUpgrade;
     public GameObject[] boxProgress;
     public int[][] priceUpgrades;
     public int[][] damages;
@@ -40,46 +41,56 @@ public class WeaponUpgradeHandler : MonoBehaviour
 
     public void Upgrade()
     {
-        //if (level == priceUpgrades.Length - 1 && levelUpgrade == priceUpgrades[level].Length - 1 || PlayerPrefs.GetInt("Gold") < priceUpgrades[level][levelUpgrade]) return;
+        if (level == priceUpgrades.Length || PlayerPrefs.GetInt("Gold") < priceUpgrades[level][levelUpgrade]) return;
         levelUpgrade++;
+        if (lastUpgrade.activeSelf)
+        {
+            lastUpgrade.SetActive(false);
+            levelUpgrade = 0;
+        }
+        CheckButtonState();
         UpgradeHandle();
     }
 
     public void UpgradeHandle()
     {
-        if(levelUpgrade == 0) buttontUpgrade.SetActive(false);
         if (levelUpgrade < boxProgress.Length)
         {
-            textLv.text = level + 1.ToString();
-            textDamage.text = DataManager.instance.sawData.damages[level][levelUpgrade].ToString();
+            textLv.text = "Lv" + (level + 1);
+            textDamage.text = damages[level][levelUpgrade].ToString();
         }
-        textPriceUpgrade.text = DataManager.instance.sawData.priceUpgrades[level][levelUpgrade].ToString();
+        textPriceUpgrade.text = priceUpgrades[level][levelUpgrade].ToString();
         for (int i = 0; i < boxProgress.Length; i++)
         {
-            if (i <= levelUpgrade - 1)
-            {
-                boxProgress[i].SetActive(true);
-                if (levelUpgrade == boxProgress.Length)
-                {
-                    level++;
-                    ChangeTextUpgrade();
-                    levelUpgrade = -1;
-                }
-            }
-            else boxProgress[i].SetActive(false);
+
+            if (i > levelUpgrade - 1 || levelUpgrade == boxProgress.Length) boxProgress[i].SetActive(false);
+            else boxProgress[i].SetActive(true);
+        }
+        if (levelUpgrade == boxProgress.Length)
+        {
+            level++;
+            if (level != priceUpgrades.Length) ChangeTextUpgrade();
         }
     }
 
     void ChangeTextUpgrade()
     {
-        buttontUpgrade.SetActive(true);
-        textUpgrade.text = "Lv" + level + " > " + "Lv" + (level + 1) + " UPGRADE";
+        lastUpgrade.SetActive(true);
+        textLastUpgrade.text = "Lv" + level + " > " + "Lv" + (level + 1) + " UPGRADE";
     }
 
     public void CheckButtonState()
     {
-        if (level == priceUpgrades.Length - 1 && levelUpgrade == priceUpgrades[level].Length - 1) UIHandler.instance.ChangeSpriteWeaponUpgradee(frameButton, textPriceUpgrade, textMax);
-        else if (PlayerPrefs.GetInt("Gold") < priceUpgrades[level][levelUpgrade]) UIHandler.instance.ChangeSpriteWeaponUpgradee(UIHandler.Type.NOT_ENOUGH_MONEY, frameButton);
-        else UIHandler.instance.ChangeSpriteWeaponUpgradee(UIHandler.Type.ENOUGH_MONEY, frameButton);
+        if (level == priceUpgrades.Length - 1 && levelUpgrade == priceUpgrades[level].Length - 1) UIHandler.instance.ChangeSpriteWeaponUpgradee(frameUpgrade, textPriceUpgrade, textMax);
+        else if (PlayerPrefs.GetInt("Gold") < priceUpgrades[level][levelUpgrade])
+        {
+            if (levelUpgrade == boxProgress.Length) UIHandler.instance.ChangeSpriteWeaponLastUpgradee(UIHandler.Type.NOT_ENOUGH_MONEY, frameLastUpgrade);
+            else UIHandler.instance.ChangeSpriteWeaponUpgradee(UIHandler.Type.NOT_ENOUGH_MONEY, frameUpgrade);
+        }
+        else
+        {
+            if (levelUpgrade == boxProgress.Length) UIHandler.instance.ChangeSpriteWeaponLastUpgradee(UIHandler.Type.ENOUGH_MONEY, frameLastUpgrade);
+            else UIHandler.instance.ChangeSpriteWeaponUpgradee(UIHandler.Type.ENOUGH_MONEY, frameUpgrade);
+        }
     }
 }
