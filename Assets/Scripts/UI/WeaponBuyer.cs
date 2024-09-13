@@ -1,8 +1,7 @@
 using TMPro;
-using UnityEngine;
 using UnityEngine.UI;
 
-public class WeaponBuyer : MonoBehaviour
+public class WeaponBuyer : ButtonClicker
 {
     public TextMeshProUGUI textPrice;
     public Image frameButton;

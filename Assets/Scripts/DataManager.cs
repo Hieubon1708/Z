@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using UnityEngine;
+using static GameController;
 
 public class DataManager : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class DataManager : MonoBehaviour
     public SawData sawData;
     public FlameData flameData;
     public MachineGunData machineGunData;
-    public PlayerData playerData;
+    public IngameData[] ingameDatas;
 
     public void Awake()
     {
@@ -24,7 +25,6 @@ public class DataManager : MonoBehaviour
         TextAsset jsSaw = Resources.Load<TextAsset>("Datas/SawData");
         TextAsset jsFlame = Resources.Load<TextAsset>("Datas/FlameData");
         TextAsset jsMachineGun = Resources.Load<TextAsset>("Datas/MachineGunData");
-        TextAsset jsPlayer = Resources.Load<TextAsset>("Datas/PlayerData");
         if (jsBlock != null)
         {
             blockData = JsonConvert.DeserializeObject<BlockData>(jsBlock.text);
@@ -47,15 +47,15 @@ public class DataManager : MonoBehaviour
         sawData = JsonConvert.DeserializeObject<SawData>(jsSaw.text);
         flameData = JsonConvert.DeserializeObject<FlameData>(jsFlame.text);
         machineGunData = JsonConvert.DeserializeObject<MachineGunData>(jsMachineGun.text);
-        playerData = JsonConvert.DeserializeObject<PlayerData>(jsPlayer.text);
     }
 }
 
 [System.Serializable]
 public class BlockData
 {
+    public int price;
     public int[] hps;
-    public int[] prices;
+    public int[] priceUpgrades;
 }
 
 [System.Serializable]
@@ -83,11 +83,19 @@ public class MachineGunData
 }
 
 [System.Serializable]
-public class PlayerData
+public class IngameData
 {
     public int blockLevel;
-    public GameController.WEAPON weaponType;
+    public WEAPON weaponType;
     public int weaponLevel;
     public int weaponLevelUpgrade;
+
+    public IngameData(int blockLevel, WEAPON weaponType, int weaponLevel, int weaponLevelUpgrade)
+    {
+        this.blockLevel = blockLevel;
+        this.weaponType = weaponType;
+        this.weaponLevel = weaponLevel;
+        this.weaponLevelUpgrade = weaponLevelUpgrade;
+    }
 }
 

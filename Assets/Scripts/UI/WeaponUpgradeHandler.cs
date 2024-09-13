@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static GameController;
 
 public class WeaponUpgradeHandler : MonoBehaviour
 {
@@ -15,20 +16,17 @@ public class WeaponUpgradeHandler : MonoBehaviour
     public TextMeshProUGUI textLastUpgrade;
     public GameObject lastUpgrade;
     public GameObject[] boxProgress;
+    public BlockUpgradeHandler blockUpgradeHandler;
+    public WEAPON weaponType;
+    public GameObject weapon;
     public int[][] priceUpgrades;
     public int[][] damages;
 
-    public void LoadData(int level)
+    public void LoadData(int level, int levelUpgrade)
     {
-        levelUpgrade = DataManager.instance.playerData.weaponLevelUpgrade;
+        this.levelUpgrade = levelUpgrade;
         this.level = level;
         UpgradeHandle();
-    }
-
-    public void OnEnable()
-    {
-        //
-        CheckButtonState();
     }
 
     public void Update()
@@ -41,14 +39,14 @@ public class WeaponUpgradeHandler : MonoBehaviour
 
     public void Upgrade()
     {
-        if (level == priceUpgrades.Length || PlayerPrefs.GetInt("Gold") < priceUpgrades[level][levelUpgrade]) return;
         levelUpgrade++;
         if (lastUpgrade.activeSelf)
         {
+            blockUpgradeHandler.BuyWeapon(weaponType, level);
             lastUpgrade.SetActive(false);
             levelUpgrade = 0;
+            level++;
         }
-        CheckButtonState();
         UpgradeHandle();
     }
 
@@ -68,19 +66,20 @@ public class WeaponUpgradeHandler : MonoBehaviour
         }
         if (levelUpgrade == boxProgress.Length)
         {
-            level++;
-            if (level != priceUpgrades.Length) ChangeTextUpgrade();
+            if (level != priceUpgrades.Length - 1) ChangeTextUpgrade();
+            levelUpgrade = 0;
         }
     }
 
     void ChangeTextUpgrade()
     {
         lastUpgrade.SetActive(true);
-        textLastUpgrade.text = "Lv" + level + " > " + "Lv" + (level + 1) + " UPGRADE";
+        textLastUpgrade.text = "Lv" + (level + 1) + " > " + "Lv" + (level + 2) + " UPGRADE";
     }
 
     public void CheckButtonState()
     {
+        if (weapon == null) return;
         if (level == priceUpgrades.Length - 1 && levelUpgrade == priceUpgrades[level].Length - 1) UIHandler.instance.ChangeSpriteWeaponUpgradee(frameUpgrade, textPriceUpgrade, textMax);
         else if (PlayerPrefs.GetInt("Gold") < priceUpgrades[level][levelUpgrade])
         {
@@ -92,5 +91,15 @@ public class WeaponUpgradeHandler : MonoBehaviour
             if (levelUpgrade == boxProgress.Length) UIHandler.instance.ChangeSpriteWeaponLastUpgradee(UIHandler.Type.ENOUGH_MONEY, frameLastUpgrade);
             else UIHandler.instance.ChangeSpriteWeaponUpgradee(UIHandler.Type.ENOUGH_MONEY, frameUpgrade);
         }
+    }
+
+    public void ResetData()
+    {
+        if (weapon == null) return;
+        weapon.SetActive(false);
+        level = 0;
+        levelUpgrade = 0;
+        lastUpgrade.SetActive(false);
+        UpgradeHandle();
     }
 }

@@ -23,9 +23,14 @@ public class BlockUpgradeController : MonoBehaviour
             isHold = false;
             if (blockSelected != null)
             {
-                if (Vector2.Distance(blockSelected.transform.position, recyle.transform.position) <= 1f) BlockController.instance.DeleteBlock(blockSelected);
+                Block scBlock = BlockController.instance.GetScBlock(blockSelected);
+                if (Vector2.Distance(blockSelected.transform.position, recyle.transform.position) <= 1f)
+                {
+                    BlockController.instance.DeleteBlock(blockSelected);
+                    scBlock.blockUpgradeHandler.ResetData();
+                }
                 blockSelected.transform.position = frame1.transform.position;
-                BlockController.instance.GetScBlock(blockSelected).blockUpgradeHandler.DeSelected();
+                scBlock.blockUpgradeHandler.DeSelected();
                 SetActiveFrame(false);
                 blockSelected = null;
             }
@@ -45,10 +50,11 @@ public class BlockUpgradeController : MonoBehaviour
                 RaycastHit2D hit = Physics2D.Raycast(raycastPosition, Vector2.zero, raycastDistance, layerMask);
                 if (hit.collider != null)
                 {
-                    SetActiveFrame(true);
                     blockSelected = hit.rigidbody.gameObject;
                     frame1.transform.position = blockSelected.transform.position;
+                    frame2.transform.position = blockSelected.transform.position;
                     BlockController.instance.GetScBlock(blockSelected).blockUpgradeHandler.Selected();
+                    SetActiveFrame(true);
                     isHold = true;
                 }
             }

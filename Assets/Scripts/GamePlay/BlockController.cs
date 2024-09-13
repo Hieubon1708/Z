@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.IO;
+using UnityEditor;
 using UnityEngine;
+using static GameController;
 
 public class BlockController : MonoBehaviour
 {
@@ -32,22 +36,39 @@ public class BlockController : MonoBehaviour
 
     private void Start()
     {
-        LoadData();
+        //LoadData();
     }
 
     void LoadData()
     {
-        //for
-        GameObject block = blockPools[0];
-        blockPools.Remove(block);
-        block.transform.localPosition = new Vector2(block.transform.localPosition.x, startY + distance * blocks.Count);
-        blocks.Add(block);
-        block.SetActive(true);
-        player.transform.localPosition = new Vector2(player.transform.localPosition.x, startYPlayer + distance * blocks.Count);
+        IngameData[] ingameDatas = DataManager.instance.ingameDatas;
+        for (int i = 0; i < ingameDatas.Length; i++)
+        {
+            GameObject block = blockPools[0];
+            blockPools.Remove(block);
+            block.transform.localPosition = new Vector2(block.transform.localPosition.x, startY + distance * blocks.Count);
+            blocks.Add(block);
+            block.SetActive(true);
+            player.transform.localPosition = new Vector2(player.transform.localPosition.x, startYPlayer + distance * blocks.Count);
 
-        BlockUpgradeHandler blockUpgradeHandler = block.GetComponent<BlockUpgradeHandler>();
-        int blockLevel = DataManager.instance.playerData.blockLevel;
-        blockUpgradeHandler.LoadData(blockLevel);
+            BlockUpgradeHandler blockUpgradeHandler = GetScBlock(block).blockUpgradeHandler;
+
+            int blockLevel = ingameDatas[i].blockLevel;
+            WEAPON weaponType = ingameDatas[i].weaponType;
+            int weaponLevel = ingameDatas[i].weaponLevel;
+            int weaponLevelUpgrade = ingameDatas[i].weaponLevelUpgrade;
+
+            blockUpgradeHandler.LoadData(blockLevel, weaponType, weaponLevel, weaponLevelUpgrade);
+        }
+        CheckButtonStateAll();
+    }
+
+    public void CheckButtonStateAll()
+    {
+        for(int i = 0; i < blocks.Count; i++)
+        {
+            GetScBlock(blocks[i]).blockUpgradeHandler.CheckButtonStateInBlock();
+        }
     }
 
     public void AddBlock()
@@ -61,10 +82,11 @@ public class BlockController : MonoBehaviour
             blocks.Add(block);
             block.SetActive(true);
             player.transform.localPosition = new Vector2(player.transform.localPosition.x, startYPlayer + distance * blocks.Count);
-
+            scBlock.blockUpgradeHandler.UpgradeHandle();
             scBlock.AddBlockAni();
             CarController.instance.AddBookAni();
             PlayerController.instance.AddBookAni();
+            CheckButtonStateAll();
         }
     }
 
@@ -144,5 +166,34 @@ public class BlockController : MonoBehaviour
             blockPools.Add(blockIns);
             scBlocks.Add(scBlock);
         }
+    }
+
+    public void OnApplicationQuit()
+    {
+        List<IngameData> listData = new List<IngameData>();
+        for (int i = 0; i < blocks.Count; i++)
+        {
+            Block scBlock = blocks[i].GetComponent<Block>();
+            int blockLevel = scBlock.level;
+            WEAPON weaponType = scBlock.blockUpgradeHandler.weaponUpgradeHandler.weaponType;
+            int weaponLevel = scBlock.blockUpgradeHandler.weaponUpgradeHandler.level;
+            int weaponUpgradeLevel = scBlock.blockUpgradeHandler.weaponUpgradeHandler.levelUpgrade;
+
+            /*Debug.LogWarning(blockLevel);
+            Debug.LogWarning(weaponType);
+            Debug.LogWarning(weaponLevel);
+            Debug.LogWarning(weaponUpgradeLevel);
+            Debug.LogWarning("--------------------");*/
+
+            IngameData ingameData = new IngameData(blockLevel, weaponType, weaponLevel, weaponUpgradeLevel);
+            listData.Add(ingameData);
+        }
+
+        string jsPlayer = JsonConvert.SerializeObject(listData);
+        string filePath = Application.persistentDataPath + "/PlayerData.json";
+
+        //Debug.LogWarning(jsPlayer);
+        File.WriteAllText(filePath, jsPlayer);
+        AssetDatabase.Refresh();
     }
 }

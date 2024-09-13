@@ -1,5 +1,5 @@
-using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class FlameBuyer : WeaponBuyer
 {
@@ -8,15 +8,8 @@ public class FlameBuyer : WeaponBuyer
         textPrice.text = DataManager.instance.flameData.price.ToString();
     }
 
-    public void OnEnable()
-    {
-        //
-        CheckButtonState();
-    }
-
     public override void Buy()
     {
-        if (PlayerPrefs.GetInt("Gold") < DataManager.instance.flameData.price) return;
         blockUpgradeHandler.BuyWeapon(GameController.WEAPON.FLAME, 0);
     }
 
@@ -24,5 +17,18 @@ public class FlameBuyer : WeaponBuyer
     {
         if (PlayerPrefs.GetInt("Gold") < DataManager.instance.flameData.price) UIHandler.instance.ChangeSpriteWeaponBuyer(UIHandler.Type.NOT_ENOUGH_MONEY, frameButton, frameGold);
         else UIHandler.instance.ChangeSpriteWeaponBuyer(UIHandler.Type.ENOUGH_MONEY, frameButton, frameGold);
+    }
+
+    public override void OnPointerDown(PointerEventData eventData)
+    {
+        if (PlayerPrefs.GetInt("Gold") < DataManager.instance.flameData.price) return;
+        base.OnPointerDown(eventData);
+    }
+
+    public override void OnPointerUp(PointerEventData eventData)
+    {
+        if (PlayerPrefs.GetInt("Gold") < DataManager.instance.flameData.price) return;
+        base.OnPointerUp(eventData);
+        Buy();
     }
 }

@@ -1,5 +1,5 @@
-using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class SawBuyer : WeaponBuyer
 {
@@ -8,15 +8,8 @@ public class SawBuyer : WeaponBuyer
         textPrice.text = DataManager.instance.sawData.price.ToString();
     }
 
-    public void OnEnable()
-    {
-        //
-        CheckButtonState();
-    }
-
     public override void Buy()
     {
-        if (PlayerPrefs.GetInt("Gold") < DataManager.instance.sawData.price) return;
         blockUpgradeHandler.BuyWeapon(GameController.WEAPON.SAW, 0);
     }
 
@@ -24,5 +17,18 @@ public class SawBuyer : WeaponBuyer
     {
         if (PlayerPrefs.GetInt("Gold") < DataManager.instance.sawData.price) UIHandler.instance.ChangeSpriteWeaponBuyer(UIHandler.Type.NOT_ENOUGH_MONEY, frameButton, frameGold);
         else UIHandler.instance.ChangeSpriteWeaponBuyer(UIHandler.Type.ENOUGH_MONEY, frameButton, frameGold);
+    }
+
+    public override void OnPointerUp(PointerEventData eventData)
+    {
+        if (PlayerPrefs.GetInt("Gold") < DataManager.instance.sawData.price) return;
+        base.OnPointerUp(eventData);
+    }
+
+    public override void OnPointerDown(PointerEventData eventData)
+    {
+        if (PlayerPrefs.GetInt("Gold") < DataManager.instance.sawData.price) return;
+        base.OnPointerDown(eventData);
+        Buy();
     }
 }
