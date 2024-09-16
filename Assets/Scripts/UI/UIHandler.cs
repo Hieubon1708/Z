@@ -16,7 +16,6 @@ public class UIHandler : MonoBehaviour
     public void Awake()
     {
         instance = this;
-        PlayerPrefs.SetInt("Gold", 0);
     }
 
     public enum Type

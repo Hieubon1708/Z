@@ -4,18 +4,25 @@ using UnityEngine.EventSystems;
 
 public class ButtonClicker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
+    Vector3 localScale;
+
+    public void Start()
+    {
+        localScale = transform.localScale;
+    }
+
     public virtual void OnPointerDown(PointerEventData eventData)
     {
-        ScaleButton(0.95f, 0.05f);
+        ScaleButton(localScale * 0.9f, 0.05f);
     }
 
     public virtual void OnPointerUp(PointerEventData eventData)
     {
-        ScaleButton(1f, 0.05f);
+        ScaleButton(localScale, 0.05f);
         BlockController.instance.CheckButtonStateAll();
     }
 
-    void ScaleButton(float value, float duration)
+    void ScaleButton(Vector3 value, float duration)
     {
         transform.DOKill();
         transform.DOScale(value, duration).SetEase(Ease.Linear);

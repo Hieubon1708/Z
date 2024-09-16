@@ -5,6 +5,7 @@ public class Block : MonoBehaviour
     public int level;
     public float hp;
     public Animation ani;
+    public int gold;
     public BlockUpgradeHandler blockUpgradeHandler;
 
     AnimationClip[] animationClips = new AnimationClip[3];
@@ -22,6 +23,12 @@ public class Block : MonoBehaviour
         this.hp -= hp;
         if(this.hp < 0) this.hp = 0;
         return this.hp;
+    }
+
+    public void GoldHandle(int gold)
+    {
+        this.gold += gold;
+        DataManager.instance.playerData.gold -= gold;
     }
 
     public void AddBlockAni()

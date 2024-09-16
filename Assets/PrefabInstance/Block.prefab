@@ -4886,20 +4886,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4df2beed09f3b84fbda967294203e27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  textPriceUpgrade: {fileID: 8013505341445488772}
+  frame: {fileID: 6737097860021179216}
   blockInfo: {fileID: -5646591483788929526}
-  weaponBuyers:
-  - {fileID: 2657682846421795537}
-  - {fileID: 1555540361947700128}
-  - {fileID: 3100100909252481849}
-  scWeaponBuyers:
-  - {fileID: 6567011780750264562}
-  - {fileID: 9103188834291202811}
-  - {fileID: 4794354841889457683}
+  weaponBuyer: {fileID: 2276785880224036623}
+  weaponBuyButtons:
+  - {fileID: 5093503683493936208}
+  - {fileID: 1411778025174414651}
+  - {fileID: 7135567256935585298}
   spriteRenderer: {fileID: 212773638200962692}
   sortingGroup: {fileID: 210848658569220097}
   textLv: {fileID: 293646685912890721}
   textHp: {fileID: 7398762722168765683}
-  textPrice: {fileID: 8013505341445488772}
   textMax: {fileID: 1608077379665982518}
   frameButton: {fileID: 6737097860021179216}
   saws:
@@ -15880,6 +15878,7 @@ GameObject:
   - component: {fileID: 4943616995615568799}
   - component: {fileID: 8001124212025032909}
   - component: {fileID: 9103188834291202811}
+  - component: {fileID: 1411778025174414651}
   m_Layer: 5
   m_Name: FlameBuyer
   m_TagString: Untagged
@@ -15956,6 +15955,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a1c7a8f8dc22bb4ea638f16de3fb235, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flameBuyHandler: {fileID: 1411778025174414651}
+--- !u!114 &1411778025174414651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1555540361947700128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 850a181eacdafa54b89cbe4ed05df5a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   textPrice: {fileID: 5027909053800904673}
@@ -16120,7 +16132,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2044387539064344430}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -16130,13 +16142,13 @@ RectTransform:
   - {fileID: 6737883629762035984}
   - {fileID: 788825159389513871}
   - {fileID: 3914254624335721939}
-  m_Father: {fileID: 7212683863066887777}
+  m_Father: {fileID: 1103477021619008300}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.55000305, y: 2.6}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -165, y: -44}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 1, y: 1}
 --- !u!114 &5576706350462200793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16154,8 +16166,8 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
-  m_Spacing: 0.45
+  m_ChildAlignment: 7
+  m_Spacing: 2.5
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
@@ -16315,6 +16327,7 @@ GameObject:
   - component: {fileID: 8873227251745342675}
   - component: {fileID: 9115671450976436632}
   - component: {fileID: 6567011780750264562}
+  - component: {fileID: 5093503683493936208}
   m_Layer: 5
   m_Name: SawBuyer
   m_TagString: Untagged
@@ -16391,6 +16404,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b12bd1e3087881e4882ebfc0be4e06c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sawBuyHandler: {fileID: 5093503683493936208}
+--- !u!114 &5093503683493936208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2657682846421795537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c2bf723afa59a74da11107ed4bbb9ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   textPrice: {fileID: 6762748007631564015}
@@ -16811,6 +16837,7 @@ GameObject:
   - component: {fileID: 3932899657812209494}
   - component: {fileID: 4903336646774714839}
   - component: {fileID: 4794354841889457683}
+  - component: {fileID: 7135567256935585298}
   m_Layer: 5
   m_Name: MachineGunBuyer
   m_TagString: Untagged
@@ -16887,6 +16914,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3790f9c79e5b21d4ab16966cd8a42b0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  machineGunBuyHandler: {fileID: 7135567256935585298}
+--- !u!114 &7135567256935585298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3100100909252481849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c7467b1f71c48843bc5cdf4b8bb7a9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   textPrice: {fileID: 4422346811489810453}
@@ -17003,8 +17043,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 19.199999, y: -2.55}
-  m_SizeDelta: {x: 5.1, y: 5.1}
+  m_AnchoredPosition: {x: 105.5, y: 14}
+  m_SizeDelta: {x: 28, y: 28}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5336182368382512646
 CanvasRenderer:
@@ -17078,8 +17118,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 13.65, y: -2.55}
-  m_SizeDelta: {x: 5.1, y: 5.1}
+  m_AnchoredPosition: {x: 75, y: 14}
+  m_SizeDelta: {x: 28, y: 28}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1734721539687317741
 CanvasRenderer:
@@ -17229,8 +17269,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 2.55, y: -2.55}
-  m_SizeDelta: {x: 5.1, y: 5.1}
+  m_AnchoredPosition: {x: 14, y: 14}
+  m_SizeDelta: {x: 28, y: 28}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4330553637354722179
 CanvasRenderer:
@@ -17437,6 +17477,7 @@ RectTransform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7212683863066887777}
+  - {fileID: 3430675180215946629}
   - {fileID: 7375737401601307040}
   - {fileID: 7253629722795747434}
   - {fileID: 437877714294654250}
@@ -17499,12 +17540,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70a06b07d3dd5f84a9d6ceff7147e7df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  textPriceUpgrade: {fileID: 8300867581836072105}
+  frame: {fileID: 1911217367795741502}
   level: 0
   levelUpgrade: 0
   textLv: {fileID: 6750203979252152155}
   textDamage: {fileID: 2764410013108724507}
-  textPriceUpgrade: {fileID: 8300867581836072105}
-  frameUpgrade: {fileID: 1911217367795741502}
   frameLastUpgrade: {fileID: 2879091094153050457}
   textMax: {fileID: 8348724246212844116}
   textLastUpgrade: {fileID: 1785713905897254748}
@@ -17560,8 +17601,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 3430675180215946629}
+  m_Children: []
   m_Father: {fileID: 1103477021619008300}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
@@ -17974,8 +18014,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 8.099999, y: -2.55}
-  m_SizeDelta: {x: 5.1, y: 5.1}
+  m_AnchoredPosition: {x: 44.5, y: 14}
+  m_SizeDelta: {x: 28, y: 28}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2686565126953268167
 CanvasRenderer:
@@ -18528,8 +18568,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 24.749998, y: -2.55}
-  m_SizeDelta: {x: 5.1, y: 5.1}
+  m_AnchoredPosition: {x: 136, y: 14}
+  m_SizeDelta: {x: 28, y: 28}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &190839233442842861
 CanvasRenderer:

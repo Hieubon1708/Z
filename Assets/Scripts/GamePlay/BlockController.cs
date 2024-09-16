@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
-using UnityEditor;
 using UnityEngine;
 using static GameController;
 
@@ -18,6 +17,8 @@ public class BlockController : MonoBehaviour
     public Transform container;
     public Transform player;
     public GameObject preBlock;
+    public ButtonBuyer blockBuyer;
+    public EnergyUpgradeHandler energyUpgradee;
     public int count;
 
     public void Awake()
@@ -36,7 +37,8 @@ public class BlockController : MonoBehaviour
 
     private void Start()
     {
-        //LoadData();
+        LoadData();
+        CheckButtonStateAll();
     }
 
     void LoadData()
@@ -50,6 +52,8 @@ public class BlockController : MonoBehaviour
             blocks.Add(block);
             block.SetActive(true);
             player.transform.localPosition = new Vector2(player.transform.localPosition.x, startYPlayer + distance * blocks.Count);
+            Block scBlock = GetScBlock(block);
+            scBlock.gold = ingameDatas[i].blockGold;
 
             BlockUpgradeHandler blockUpgradeHandler = GetScBlock(block).blockUpgradeHandler;
 
@@ -60,15 +64,18 @@ public class BlockController : MonoBehaviour
 
             blockUpgradeHandler.LoadData(blockLevel, weaponType, weaponLevel, weaponLevelUpgrade);
         }
-        CheckButtonStateAll();
+        blockBuyer.LoadData();
+        energyUpgradee.LoadData();
     }
 
     public void CheckButtonStateAll()
     {
-        for(int i = 0; i < blocks.Count; i++)
+        for (int i = 0; i < blocks.Count; i++)
         {
             GetScBlock(blocks[i]).blockUpgradeHandler.CheckButtonStateInBlock();
         }
+        blockBuyer.CheckButtonState();
+        energyUpgradee.CheckButtonState();
     }
 
     public void AddBlock()
@@ -87,6 +94,7 @@ public class BlockController : MonoBehaviour
             CarController.instance.AddBookAni();
             PlayerController.instance.AddBookAni();
             CheckButtonStateAll();
+            scBlock.GoldHandle(DataManager.instance.blockData.price);
         }
     }
 
@@ -129,6 +137,7 @@ public class BlockController : MonoBehaviour
 
     public void DeleteBlock(GameObject block)
     {
+        if (blockPools.Count == 0) blockBuyer.gameObject.SetActive(true);
         Block scBlock = GetScBlock(block);
         block.SetActive(false);
         blockPools.Add(block);
@@ -189,11 +198,14 @@ public class BlockController : MonoBehaviour
             listData.Add(ingameData);
         }
 
-        string jsPlayer = JsonConvert.SerializeObject(listData);
-        string filePath = Application.persistentDataPath + "/PlayerData.json";
+        string jsIngame = JsonConvert.SerializeObject(listData);
+        string filePathIngame = Path.Combine(Application.persistentDataPath, "IngameData.json");
+        File.WriteAllText(filePathIngame, jsIngame);
 
-        //Debug.LogWarning(jsPlayer);
-        File.WriteAllText(filePath, jsPlayer);
-        AssetDatabase.Refresh();
+        string jsPlayer = JsonConvert.SerializeObject(DataManager.instance.playerData);
+        string filePathPlayer = Path.Combine(Application.persistentDataPath, "PLayerData.json");
+        File.WriteAllText(filePathPlayer, jsPlayer);
+
+
     }
 }

@@ -3,14 +3,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using static GameController;
 
-public class WeaponUpgradeHandler : MonoBehaviour
+public class WeaponUpgradeHandler : ButtonUpgradee
 {
     public int level;
     public int levelUpgrade;
     public TextMeshProUGUI textLv;
     public TextMeshProUGUI textDamage;
-    public TextMeshProUGUI textPriceUpgrade;
-    public Image frameUpgrade;
     public Image frameLastUpgrade;
     public TextMeshProUGUI textMax;
     public TextMeshProUGUI textLastUpgrade;
@@ -37,7 +35,7 @@ public class WeaponUpgradeHandler : MonoBehaviour
         }
     }
 
-    public void Upgrade()
+    public override void Upgrade()
     {
         levelUpgrade++;
         if (lastUpgrade.activeSelf)
@@ -50,7 +48,7 @@ public class WeaponUpgradeHandler : MonoBehaviour
         UpgradeHandle();
     }
 
-    public void UpgradeHandle()
+    public override void UpgradeHandle()
     {
         if (levelUpgrade < boxProgress.Length)
         {
@@ -77,19 +75,19 @@ public class WeaponUpgradeHandler : MonoBehaviour
         textLastUpgrade.text = "Lv" + (level + 1) + " > " + "Lv" + (level + 2) + " UPGRADE";
     }
 
-    public void CheckButtonState()
+    public override void CheckButtonState()
     {
         if (weapon == null) return;
-        if (level == priceUpgrades.Length - 1 && levelUpgrade == priceUpgrades[level].Length - 1) UIHandler.instance.ChangeSpriteWeaponUpgradee(frameUpgrade, textPriceUpgrade, textMax);
-        else if (PlayerPrefs.GetInt("Gold") < priceUpgrades[level][levelUpgrade])
+        if (level == priceUpgrades.Length - 1 && levelUpgrade == priceUpgrades[level].Length - 1) UIHandler.instance.ChangeSpriteWeaponUpgradee(frame, textPriceUpgrade, textMax);
+        else if (DataManager.instance.playerData.gold < priceUpgrades[level][levelUpgrade])
         {
             if (levelUpgrade == boxProgress.Length) UIHandler.instance.ChangeSpriteWeaponLastUpgradee(UIHandler.Type.NOT_ENOUGH_MONEY, frameLastUpgrade);
-            else UIHandler.instance.ChangeSpriteWeaponUpgradee(UIHandler.Type.NOT_ENOUGH_MONEY, frameUpgrade);
+            else UIHandler.instance.ChangeSpriteWeaponUpgradee(UIHandler.Type.NOT_ENOUGH_MONEY, frame);
         }
         else
         {
             if (levelUpgrade == boxProgress.Length) UIHandler.instance.ChangeSpriteWeaponLastUpgradee(UIHandler.Type.ENOUGH_MONEY, frameLastUpgrade);
-            else UIHandler.instance.ChangeSpriteWeaponUpgradee(UIHandler.Type.ENOUGH_MONEY, frameUpgrade);
+            else UIHandler.instance.ChangeSpriteWeaponUpgradee(UIHandler.Type.ENOUGH_MONEY, frame);
         }
     }
 

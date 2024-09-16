@@ -1,4 +1,5 @@
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System.IO;
 using UnityEngine;
 using static GameController;
 
@@ -11,6 +12,8 @@ public class DataManager : MonoBehaviour
     public SawData sawData;
     public FlameData flameData;
     public MachineGunData machineGunData;
+    public EnergyData energyData;
+    public PlayerData playerData;
     public IngameData[] ingameDatas;
 
     public void Awake()
@@ -25,28 +28,33 @@ public class DataManager : MonoBehaviour
         TextAsset jsSaw = Resources.Load<TextAsset>("Datas/SawData");
         TextAsset jsFlame = Resources.Load<TextAsset>("Datas/FlameData");
         TextAsset jsMachineGun = Resources.Load<TextAsset>("Datas/MachineGunData");
-        if (jsBlock != null)
-        {
-            blockData = JsonConvert.DeserializeObject<BlockData>(jsBlock.text);
-            if (blockData != null)
-            {
-                for (int i = 0; i < blockData.hps.Length; i++)
-                {
-                    //Debug.LogWarning(blockData.hps[i]);
-                }
-            }
-            else
-            {
-                Debug.Log("Failed to parse JSON file.");
-            }
-        }
-        else
-        {
-            Debug.Log("JSON file not found.");
-        }
+        TextAsset jsEnergy= Resources.Load<TextAsset>("Datas/EnergyData");
+
+        blockData = JsonConvert.DeserializeObject<BlockData>(jsBlock.text);
         sawData = JsonConvert.DeserializeObject<SawData>(jsSaw.text);
         flameData = JsonConvert.DeserializeObject<FlameData>(jsFlame.text);
         machineGunData = JsonConvert.DeserializeObject<MachineGunData>(jsMachineGun.text);
+        energyData = JsonConvert.DeserializeObject<EnergyData>(jsEnergy.text);
+
+        string jsIngame = Path.Combine(Application.persistentDataPath, "IngameData.json");
+        if (File.Exists(jsIngame))
+        {
+            string jsonContent = File.ReadAllText(jsIngame);
+            ingameDatas = JsonConvert.DeserializeObject<IngameData[]>(jsonContent);
+        }
+        else Debug.LogWarning("File not found: " + jsIngame);
+        
+        string jsPlayer = Path.Combine(Application.persistentDataPath, "PlayerData.json");
+        if (File.Exists(jsPlayer))
+        {
+            string jsonContent = File.ReadAllText(jsPlayer);
+            playerData = JsonConvert.DeserializeObject<PlayerData>(jsonContent);
+        }
+        else
+        {
+            Debug.LogWarning("File not found: " + jsPlayer);
+            playerData = new PlayerData();
+        }
     }
 }
 
@@ -83,9 +91,24 @@ public class MachineGunData
 }
 
 [System.Serializable]
+public class EnergyData
+{
+    public float[] times;
+    public int[] priceUpgrades;
+}
+
+[System.Serializable]
+public class PlayerData
+{
+    public int gold;
+    public int indexEnergy;
+}
+
+[System.Serializable]
 public class IngameData
 {
     public int blockLevel;
+    public int blockGold;
     public WEAPON weaponType;
     public int weaponLevel;
     public int weaponLevelUpgrade;

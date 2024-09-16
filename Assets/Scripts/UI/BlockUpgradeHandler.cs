@@ -4,16 +4,15 @@ using UnityEngine.Rendering;
 using UnityEngine.UI;
 using static GameController;
 
-public class BlockUpgradeHandler : MonoBehaviour
+public class BlockUpgradeHandler : ButtonUpgradee
 {
     public Block blockInfo;
-    public GameObject[] weaponBuyers;
-    public WeaponBuyer[] scWeaponBuyers;
+    public GameObject weaponBuyer;
+    public WeaponBuyButton[] weaponBuyButtons;
     public SpriteRenderer spriteRenderer;
     public SortingGroup sortingGroup;
     public TextMeshProUGUI textLv;
     public TextMeshProUGUI textHp;
-    public TextMeshProUGUI textPrice;
     public TextMeshProUGUI textMax;
     public Image frameButton;
     public GameObject[] saws;
@@ -35,17 +34,17 @@ public class BlockUpgradeHandler : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
-            if (PlayerPrefs.GetInt("Gold") < DataManager.instance.sawData.price) return;
+            if (DataManager.instance.playerData.gold < DataManager.instance.sawData.price) return;
             BuyWeapon(WEAPON.SAW, 0);
         }
         if (Input.GetKeyDown(KeyCode.F))
         {
-            if (PlayerPrefs.GetInt("Gold") < DataManager.instance.flameData.price) return;
+            if (DataManager.instance.playerData.gold < DataManager.instance.flameData.price) return;
             BuyWeapon(WEAPON.FLAME, 0);
         }
         if (Input.GetKeyDown(KeyCode.M))
         {
-            if (PlayerPrefs.GetInt("Gold") < DataManager.instance.machineGunData.price) return;
+            if (DataManager.instance.playerData.gold < DataManager.instance.machineGunData.price) return;
             BuyWeapon(WEAPON.MACHINE_GUN, 0);
         }
         if (Input.GetKeyDown(KeyCode.R))
@@ -86,7 +85,7 @@ public class BlockUpgradeHandler : MonoBehaviour
             weaponUpgradeHandler.priceUpgrades = DataManager.instance.machineGunData.priceUpgrades;
             weaponUpgradeHandler.damages = DataManager.instance.machineGunData.damages;
         }
-        SetActiveWeaponBuyer(false);
+        weaponBuyer.SetActive(false);
         weaponUpgrade.SetActive(true);
         if(weaponLevel > 0) weapons[weaponLevel -1].SetActive(false);
         weapons[weaponLevel].SetActive(true);
@@ -94,15 +93,7 @@ public class BlockUpgradeHandler : MonoBehaviour
         weaponUpgradeHandler.UpgradeHandle();
     }
 
-    public void SetActiveWeaponBuyer(bool isActive)
-    {
-        for (int i = 0; i < weaponBuyers.Length; i++)
-        {
-            weaponBuyers[i].SetActive(isActive);
-        }
-    }
-
-    public void Upgrade()
+    public override void Upgrade()
     {
         blockInfo.level++;
         UpgradeHandle();
@@ -110,38 +101,38 @@ public class BlockUpgradeHandler : MonoBehaviour
 
     public void CheckButtonStateInBlock()
     {
-        for(int i = 0; i < scWeaponBuyers.Length; i++)
+        for(int i = 0; i < weaponBuyButtons.Length; i++)
         {
-            scWeaponBuyers[i].CheckButtonState();
+            weaponBuyButtons[i].CheckButtonState();
         }
         CheckButtonState();
         weaponUpgradeHandler.CheckButtonState();
     }
 
-    public void CheckButtonState()
+    public override void CheckButtonState()
     {
-        if (blockInfo.level == DataManager.instance.blockData.hps.Length - 1) UIHandler.instance.ChangeSpriteBlockUpgradee(frameButton, textPrice, textMax);
-        else if (PlayerPrefs.GetInt("Gold") < DataManager.instance.blockData.priceUpgrades[blockInfo.level]) UIHandler.instance.ChangeSpriteBlockUpgradee(UIHandler.Type.NOT_ENOUGH_MONEY, frameButton);
+        if (blockInfo.level == DataManager.instance.blockData.hps.Length - 1) UIHandler.instance.ChangeSpriteBlockUpgradee(frameButton, textPriceUpgrade, textMax);
+        else if (DataManager.instance.playerData.gold < DataManager.instance.blockData.priceUpgrades[blockInfo.level]) UIHandler.instance.ChangeSpriteBlockUpgradee(UIHandler.Type.NOT_ENOUGH_MONEY, frameButton);
         else UIHandler.instance.ChangeSpriteBlockUpgradee(UIHandler.Type.ENOUGH_MONEY, frameButton);
     }
 
-    public void UpgradeHandle()
+    public override void UpgradeHandle()
     {
         textLv.text = "Lv" + (blockInfo.level + 1);
         spriteRenderer.sprite = DataManager.instance.blockSprites[blockInfo.level];
         int hp = DataManager.instance.blockData.hps[blockInfo.level];
         textHp.text = hp >= 1000 ? Mathf.Floor(hp / 100) / 10 + "K" : hp.ToString();
-        textPrice.text = DataManager.instance.blockData.priceUpgrades[blockInfo.level].ToString();
+        textPriceUpgrade.text = DataManager.instance.blockData.priceUpgrades[blockInfo.level].ToString();
     }
 
     public void ResetData()
     {
         blockInfo.level = 0;
-        SetActiveWeaponBuyer(true);
+        weaponBuyer.SetActive(true);
         weaponUpgrade.SetActive(false);
         UpgradeHandle();
         CheckButtonState();
-        textPrice.gameObject.SetActive(true);
+        textPriceUpgrade.gameObject.SetActive(true);
         textMax.gameObject.SetActive(false);
 
         weaponUpgradeHandler.ResetData();
