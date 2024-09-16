@@ -5,6 +5,7 @@ public class SawBuyHandler : WeaponBuyButton
     public override void Buy()
     {
         blockUpgradeHandler.BuyWeapon(GameController.WEAPON.SAW, 0);
+        scBlock.PlusGold(DataManager.instance.sawData.price);
     }
 
     public override void LoadData()

@@ -7,6 +7,11 @@ public class EnergyUpgradeHandler : ButtonUpgradee
     public TextMeshProUGUI textTime;
     public Image lightling;
 
+    public void Start()
+    {
+        LoadData();
+    }
+
     public void LoadData()
     {
         UpgradeHandle();
@@ -28,6 +33,7 @@ public class EnergyUpgradeHandler : ButtonUpgradee
 
     public override void Upgrade()
     {
+        DataManager.instance.playerData.gold -= DataManager.instance.energyData.priceUpgrades[DataManager.instance.playerData.indexEnergy];
         DataManager.instance.playerData.indexEnergy++;
         UpgradeHandle();
     }

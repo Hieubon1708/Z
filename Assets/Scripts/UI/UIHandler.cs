@@ -6,6 +6,8 @@ public class UIHandler : MonoBehaviour
 {
     public static UIHandler instance;
 
+    public TextMeshProUGUI textGold;
+
     public Sprite[] frameButtonWeaponBuyers;
     public Sprite[] frameGoldWeaponBuyers;
 
@@ -16,6 +18,21 @@ public class UIHandler : MonoBehaviour
     public void Awake()
     {
         instance = this;
+    }
+
+    public void Start()
+    {
+        LoadData();
+    }
+
+    void LoadData()
+    {
+        GoldUpdatee();
+    }
+
+    public void GoldUpdatee()
+    {
+        textGold.text = DataManager.instance.playerData.gold.ToString();
     }
 
     public enum Type

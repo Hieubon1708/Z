@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BlockUpgradeController : MonoBehaviour
 {
-    public GameObject recyle;
+    public RectTransform recyle;
     public float raycastDistance;
     public LayerMask layerMask;
     public GameObject frame1;
@@ -24,8 +24,10 @@ public class BlockUpgradeController : MonoBehaviour
             if (blockSelected != null)
             {
                 Block scBlock = BlockController.instance.GetScBlock(blockSelected);
-                if (Vector2.Distance(blockSelected.transform.position, recyle.transform.position) <= 1f)
+                if (Vector2.Distance(blockSelected.transform.position, GameController.instance.cam.ScreenToWorldPoint(recyle.position)) <= 1f)
                 {
+                    scBlock.SubtractGold();
+                    GameController.instance.RemoveKeyDamage(blockSelected);
                     BlockController.instance.DeleteBlock(blockSelected);
                     scBlock.blockUpgradeHandler.ResetData();
                 }
@@ -39,14 +41,14 @@ public class BlockUpgradeController : MonoBehaviour
         {
             if(blockSelected != null)
             {
-                Vector2 pos = GameManager.instance.cam.ScreenToWorldPoint(Input.mousePosition);
+                Vector2 pos = GameController.instance.cam.ScreenToWorldPoint(Input.mousePosition);
                 blockSelected.transform.position = pos;
                 frame2.transform.position = pos;
                 BlockController.instance.SetPositionNearest(blockSelected, frame1);
             }
             if (!isHold)
             {
-                Vector2 raycastPosition = GameManager.instance.cam.ScreenToWorldPoint(Input.mousePosition);
+                Vector2 raycastPosition = GameController.instance.cam.ScreenToWorldPoint(Input.mousePosition);
                 RaycastHit2D hit = Physics2D.Raycast(raycastPosition, Vector2.zero, raycastDistance, layerMask);
                 if (hit.collider != null)
                 {
@@ -58,10 +60,6 @@ public class BlockUpgradeController : MonoBehaviour
                     isHold = true;
                 }
             }
-            else
-            {
-
-            }
         }
     }
 
@@ -69,10 +67,5 @@ public class BlockUpgradeController : MonoBehaviour
     {
         frame1.SetActive(isActive);
         frame2.SetActive(isActive);
-    }
-
-    public void BuyBlock()
-    {
-        BlockController.instance.AddBlock();
     }
 }

@@ -51,7 +51,7 @@ public class EnemyTowerHandler : MonoBehaviour
     void SubstractHp(float substractHp)
     {
         float hp = towerInfo.SubstractHp(substractHp);
-        healthHandler.SubstractHp(hp);
+        healthHandler.SubtractHp(hp);
         damage.ShowDamage(substractHp.ToString());
 
         if (hp == 0)

@@ -21,8 +21,8 @@ public class BlockHandler : MonoBehaviour
         {
             listEnemies.Add(enemy);
             if (!healthBar.activeSelf) healthBar.SetActive(true);
-            float hp = blockInfo.SubstractHp(25);
-            healthHandler.SubstractHp(hp);
+            float hp = blockInfo.SubtractHp(25);
+            healthHandler.SubtractHp(hp);
             DOVirtual.DelayedCall(0.5f, delegate
             {
                 listEnemies.Remove(enemy);

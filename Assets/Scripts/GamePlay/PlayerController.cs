@@ -50,12 +50,12 @@ public class PlayerController : MonoBehaviour
 
     public void AddBookAni()
     {
-        playerAni.Play("OnAddBlock");
+        playerAni.SetTrigger("addBlock");
     }
 
     public void DeleteBookAni()
     {
-        playerAni.Play("OnRemoveGameBlock");
+        playerAni.SetTrigger("removeGameBlock");
     }
 
     public void ShotAni()

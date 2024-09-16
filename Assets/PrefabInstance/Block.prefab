@@ -4825,8 +4825,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   level: 0
-  hp: 0
+  hp: 100000
   ani: {fileID: 111116773769303830}
+  gold: 0
   blockUpgradeHandler: {fileID: 24971306725054711}
   addBlock: {fileID: 198757935441744764}
 --- !u!114 &-8420918965518664630
@@ -15974,6 +15975,7 @@ MonoBehaviour:
   frameButton: {fileID: 8001124212025032909}
   frameGold: {fileID: 6684875308044399884}
   blockUpgradeHandler: {fileID: 24971306725054711}
+  scBlock: {fileID: -5646591483788929526}
 --- !u!1 &1671129191577267794
 GameObject:
   m_ObjectHideFlags: 0
@@ -16423,6 +16425,7 @@ MonoBehaviour:
   frameButton: {fileID: 9115671450976436632}
   frameGold: {fileID: 8017105781232673944}
   blockUpgradeHandler: {fileID: 24971306725054711}
+  scBlock: {fileID: -5646591483788929526}
 --- !u!1 &2788694944140224257
 GameObject:
   m_ObjectHideFlags: 0
@@ -16933,6 +16936,7 @@ MonoBehaviour:
   frameButton: {fileID: 4903336646774714839}
   frameGold: {fileID: 2376282606190777901}
   blockUpgradeHandler: {fileID: 24971306725054711}
+  scBlock: {fileID: -5646591483788929526}
 --- !u!1 &3320505638253819840
 GameObject:
   m_ObjectHideFlags: 0

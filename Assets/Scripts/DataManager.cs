@@ -7,7 +7,15 @@ public class DataManager : MonoBehaviour
 {
     public static DataManager instance;
 
+    public Sprite[] blockSpritesLv1;
+    public Sprite[] blockSpritesLv2;
+    public Sprite[] blockSpritesLv3;
+    public Sprite[] blockSpritesLv4;
+    public Sprite[] blockSpritesLv5;
+    public Sprite[] blockSpritesLv6;
+
     public Sprite[] blockSprites;
+
     public BlockData blockData;
     public SawData sawData;
     public FlameData flameData;
@@ -20,6 +28,16 @@ public class DataManager : MonoBehaviour
     {
         instance = this;
         DataReader();
+    }
+
+    public void SetBlockSprites(int level)
+    {
+        if (level == 0) blockSprites = blockSpritesLv1;
+        if (level == 1) blockSprites = blockSpritesLv2;
+        if (level == 2) blockSprites = blockSpritesLv3;
+        if (level == 3) blockSprites = blockSpritesLv4;
+        if (level == 4) blockSprites = blockSpritesLv5;
+        if (level == 5) blockSprites = blockSpritesLv6;
     }
 
     void DataReader()
@@ -100,6 +118,7 @@ public class EnergyData
 [System.Serializable]
 public class PlayerData
 {
+    public int gameLevel;
     public int gold;
     public int indexEnergy;
 }
@@ -113,9 +132,10 @@ public class IngameData
     public int weaponLevel;
     public int weaponLevelUpgrade;
 
-    public IngameData(int blockLevel, WEAPON weaponType, int weaponLevel, int weaponLevelUpgrade)
+    public IngameData(int blockLevel, int blockGold, WEAPON weaponType, int weaponLevel, int weaponLevelUpgrade)
     {
         this.blockLevel = blockLevel;
+        this.blockGold = blockGold;
         this.weaponType = weaponType;
         this.weaponLevel = weaponLevel;
         this.weaponLevelUpgrade = weaponLevelUpgrade;

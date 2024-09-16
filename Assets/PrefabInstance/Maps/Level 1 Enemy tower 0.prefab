@@ -576,7 +576,7 @@ MonoBehaviour:
   amoutLimit: 3
   enemies:
   - {fileID: 3440869563518828017, guid: c46c28b844822c7419b085415db0c442, type: 3}
-  amout: 1e000000
+  amout: 02000000
   speed:
   - -2
   listRandomEs: []
@@ -607,7 +607,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ad3276872c3cf34dbc3be79590482ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 100
+  hp: 1000000
   textHp: {fileID: 4599421039521701026}
 --- !u!114 &-4907019566322060450
 MonoBehaviour:
@@ -658,7 +658,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4131880585924067
 Transform:
   m_ObjectHideFlags: 0

@@ -7,7 +7,7 @@ public class RotateWheel : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!GameManager.instance.isStart) return;
+        if (!GameController.instance.isStart) return;
         wheels[0].transform.Rotate(new Vector3(0, 0, -1), Time.deltaTime * GameController.instance.backgroundSpeed * multiplier);
         wheels[1].transform.Rotate(new Vector3(0, 0, -1), Time.deltaTime * GameController.instance.backgroundSpeed * multiplier);
     }

@@ -12,8 +12,8 @@ public class PlayerHandler : MonoBehaviour
 
     public void OnCollisionEnter2D(Collision2D collision)
     {
-        float hp = playerInfo.SubstractHp(1000);
-        healthHandler.SubstractHp(hp);
+        float hp = playerInfo.SubtractHp(1000);
+        healthHandler.SubtractHp(hp);
         if (hp == 0)
         {
 

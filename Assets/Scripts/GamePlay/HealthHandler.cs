@@ -30,7 +30,7 @@ public class HealthHandler : MonoBehaviour
         startHp = totalHp;
     }
 
-    public void SubstractHp(float currentHp)
+    public void SubtractHp(float currentHp)
     {
         KillDelay();
         float percentage = GetPercentageOfTotal(currentHp, startHp);

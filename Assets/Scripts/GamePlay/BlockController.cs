@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using static GameController;
 
@@ -17,6 +15,7 @@ public class BlockController : MonoBehaviour
     public Transform container;
     public Transform player;
     public GameObject preBlock;
+    public GameObject goldReward;
     public ButtonBuyer blockBuyer;
     public EnergyUpgradeHandler energyUpgradee;
     public int count;
@@ -33,15 +32,25 @@ public class BlockController : MonoBehaviour
         {
             AddBlock();
         }
+        if (Input.GetMouseButtonDown(1))
+        {
+            /*foreach (KeyValuePair<GameObject, int> item in GameController.instance.listDamages)
+            {
+                Debug.LogWarning(item.Value);
+            }*/
+        }
     }
 
-    private void Start()
+    public void ResetBlockSprites()
     {
-        LoadData();
-        CheckButtonStateAll();
+        for (int i = 0; i < blocks.Count; i++)
+        {
+            Block scBlock = GetScBlock(blocks[i]);
+            scBlock.blockUpgradeHandler.UpgradeHandle();
+        }
     }
 
-    void LoadData()
+    public void LoadData()
     {
         IngameData[] ingameDatas = DataManager.instance.ingameDatas;
         for (int i = 0; i < ingameDatas.Length; i++)
@@ -64,8 +73,20 @@ public class BlockController : MonoBehaviour
 
             blockUpgradeHandler.LoadData(blockLevel, weaponType, weaponLevel, weaponLevelUpgrade);
         }
-        blockBuyer.LoadData();
         energyUpgradee.LoadData();
+        CheckButtonStateAll();
+    }
+
+    public void SetActiveUI(bool isActive)
+    {
+        for (int i = 0; i < blocks.Count; i++)
+        {
+            Block scBlock = GetScBlock(blocks[i]);
+            scBlock.blockUpgradeHandler.canvas.SetActive(isActive);
+        }
+        energyUpgradee.gameObject.SetActive(isActive);
+        blockBuyer.gameObject.SetActive(isActive);
+        goldReward.SetActive(isActive);
     }
 
     public void CheckButtonStateAll()
@@ -74,7 +95,6 @@ public class BlockController : MonoBehaviour
         {
             GetScBlock(blocks[i]).blockUpgradeHandler.CheckButtonStateInBlock();
         }
-        blockBuyer.CheckButtonState();
         energyUpgradee.CheckButtonState();
     }
 
@@ -90,11 +110,12 @@ public class BlockController : MonoBehaviour
             block.SetActive(true);
             player.transform.localPosition = new Vector2(player.transform.localPosition.x, startYPlayer + distance * blocks.Count);
             scBlock.blockUpgradeHandler.UpgradeHandle();
+            scBlock.blockUpgradeHandler.LoadData();
             scBlock.AddBlockAni();
             CarController.instance.AddBookAni();
             PlayerController.instance.AddBookAni();
             CheckButtonStateAll();
-            scBlock.GoldHandle(DataManager.instance.blockData.price);
+            scBlock.PlusGold(DataManager.instance.blockData.price);
         }
     }
 
@@ -143,7 +164,7 @@ public class BlockController : MonoBehaviour
         blockPools.Add(block);
         blocks.Remove(block);
         scBlock.DeleteBlockAni();
-        CarController.instance.DeleteBookAni();
+        CarController.instance.DeleteMenuBookAni();
         PlayerController.instance.DeleteBookAni();
         for (int i = 0; i < blocks.Count; i++)
         {
@@ -175,37 +196,5 @@ public class BlockController : MonoBehaviour
             blockPools.Add(blockIns);
             scBlocks.Add(scBlock);
         }
-    }
-
-    public void OnApplicationQuit()
-    {
-        List<IngameData> listData = new List<IngameData>();
-        for (int i = 0; i < blocks.Count; i++)
-        {
-            Block scBlock = blocks[i].GetComponent<Block>();
-            int blockLevel = scBlock.level;
-            WEAPON weaponType = scBlock.blockUpgradeHandler.weaponUpgradeHandler.weaponType;
-            int weaponLevel = scBlock.blockUpgradeHandler.weaponUpgradeHandler.level;
-            int weaponUpgradeLevel = scBlock.blockUpgradeHandler.weaponUpgradeHandler.levelUpgrade;
-
-            /*Debug.LogWarning(blockLevel);
-            Debug.LogWarning(weaponType);
-            Debug.LogWarning(weaponLevel);
-            Debug.LogWarning(weaponUpgradeLevel);
-            Debug.LogWarning("--------------------");*/
-
-            IngameData ingameData = new IngameData(blockLevel, weaponType, weaponLevel, weaponUpgradeLevel);
-            listData.Add(ingameData);
-        }
-
-        string jsIngame = JsonConvert.SerializeObject(listData);
-        string filePathIngame = Path.Combine(Application.persistentDataPath, "IngameData.json");
-        File.WriteAllText(filePathIngame, jsIngame);
-
-        string jsPlayer = JsonConvert.SerializeObject(DataManager.instance.playerData);
-        string filePathPlayer = Path.Combine(Application.persistentDataPath, "PLayerData.json");
-        File.WriteAllText(filePathPlayer, jsPlayer);
-
-
-    }
+    }        
 }

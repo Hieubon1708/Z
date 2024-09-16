@@ -18,17 +18,25 @@ public class Block : MonoBehaviour
         animationClips[2] = ani.GetClip("upgradeBlock");
     }
 
-    public float SubstractHp(float hp)
+    public float SubtractHp(float hp)
     {
         this.hp -= hp;
         if(this.hp < 0) this.hp = 0;
         return this.hp;
     }
 
-    public void GoldHandle(int gold)
+    public void PlusGold(int gold)
     {
         this.gold += gold;
         DataManager.instance.playerData.gold -= gold;
+        UIHandler.instance.GoldUpdatee();
+    }
+
+    public void SubtractGold()
+    {
+        DataManager.instance.playerData.gold += gold;
+        gold = 0;
+        UIHandler.instance.GoldUpdatee();
     }
 
     public void AddBlockAni()

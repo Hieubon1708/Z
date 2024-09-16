@@ -6,7 +6,7 @@ public class EnemyTowerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!GameManager.instance.isStart) return;
+        if (!GameController.instance.isStart) return;
         transform.Translate(-transform.right * Time.fixedDeltaTime * GameController.instance.backgroundSpeed * multiplier);
     }
 

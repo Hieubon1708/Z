@@ -1,19 +1,12 @@
+using System.Collections;
 using UnityEngine;
 
 public class FlameHandler : MonoBehaviour
 {
-    public ParticleSystem par;
-    public BoxCollider2D boxCollider;
+    public ParticleSystem flameOnceParticle;
 
-    public void PLayFlamePar()
+    public void FlameOnceParticle()
     {
-        par.Play();
-        boxCollider.enabled = true;
-    }
-    
-    public void StopFlamePar()
-    {
-        par.Stop();
-        boxCollider.enabled = false;
+        flameOnceParticle.Play();
     }
 }

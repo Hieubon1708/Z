@@ -57,10 +57,18 @@ public class BlockUpgradeHandler : ButtonUpgradee
     {
         blockInfo.level = blockLevel;
         UpgradeHandle();
-
+        LoadData();
         if (weaponType == WEAPON.NONE) return;
-        BuyWeapon(weaponType, weaponLevel);
         weaponUpgradeHandler.LoadData(weaponLevel, levelUpgrade);
+        BuyWeapon(weaponType, weaponLevel);
+    }
+
+    public void LoadData()
+    {
+        for (int i = 0; i < weaponBuyButtons.Length; i++)
+        {
+            weaponBuyButtons[i].LoadData();
+        }
     }
 
     public void BuyWeapon(WEAPON weaponType, int weaponLevel)
@@ -95,6 +103,7 @@ public class BlockUpgradeHandler : ButtonUpgradee
 
     public override void Upgrade()
     {
+        blockInfo.PlusGold(DataManager.instance.blockData.priceUpgrades[blockInfo.level]);
         blockInfo.level++;
         UpgradeHandle();
     }
@@ -130,8 +139,6 @@ public class BlockUpgradeHandler : ButtonUpgradee
         blockInfo.level = 0;
         weaponBuyer.SetActive(true);
         weaponUpgrade.SetActive(false);
-        UpgradeHandle();
-        CheckButtonState();
         textPriceUpgrade.gameObject.SetActive(true);
         textMax.gameObject.SetActive(false);
 

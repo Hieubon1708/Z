@@ -27,12 +27,17 @@ public class CarController : MonoBehaviour
 
     public void AddBookAni()
     {
-        carAni.Play("OnAddBlock");
+        carAni.SetTrigger("addBlock");
     }
 
-    public void DeleteBookAni()
+    public void DeleteMenuBookAni()
     {
-        carAni.Play("OnRemoveGameBlock");
+        carAni.SetTrigger("removeMenuBlock");
+    }
+    
+    public void DeleteGameBookAni()
+    {
+        carAni.SetTrigger("removeGameBlock");
     }
 
     public IEnumerator Bump(int index, Rigidbody2D rb)

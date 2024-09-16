@@ -5,6 +5,7 @@ public class FrameBuyHandler : WeaponBuyButton
     public override void Buy()
     {
         blockUpgradeHandler.BuyWeapon(GameController.WEAPON.FLAME, 0);
+        scBlock.PlusGold(DataManager.instance.flameData.price);
     }
 
     public override void LoadData()

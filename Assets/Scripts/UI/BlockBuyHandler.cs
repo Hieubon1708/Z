@@ -1,6 +1,11 @@
 
 public class BlockBuyHandler : ButtonBuyer
 {
+    public void Start()
+    {
+        LoadData();
+    }
+
     public override void Buy()
     {
         BlockController.instance.AddBlock();

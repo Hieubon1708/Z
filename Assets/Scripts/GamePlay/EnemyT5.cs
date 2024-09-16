@@ -12,7 +12,7 @@ public class EnemyT5 : EnemyHandler
     {
         base.OnEnable();
         targetX = Random.Range(xMin,xMax);
-        targetY = GameManager.instance.cam.ScreenToWorldPoint(new Vector2(0, Random.Range(Screen.height * 0.75f, Screen.height))).y;
+        targetY = GameController.instance.cam.ScreenToWorldPoint(new Vector2(0, Random.Range(Screen.height * 0.75f, Screen.height))).y;
     }
 
     protected override IEnumerator OnTriggerEnter2D(Collider2D collision)

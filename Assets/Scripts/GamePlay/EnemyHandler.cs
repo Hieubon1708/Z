@@ -38,36 +38,36 @@ public class EnemyHandler : MonoBehaviour
 
     protected virtual IEnumerator OnTriggerEnter2D(Collider2D collision)
     {
-        int substractHp;
+        int subtractHp;
         if (collision.CompareTag("Bullet"))
         {
-            substractHp = 70;
+            subtractHp = 70;
             collision.gameObject.SetActive(false);
-            SubstractHp(substractHp);
+            SubtractHp(subtractHp);
         }
         if (collision.CompareTag("MachineGun"))
         {
-            substractHp = 44;
+            subtractHp = GameController.instance.listDamages[collision.attachedRigidbody.gameObject];
             collision.gameObject.SetActive(false);
-            SubstractHp(substractHp);
+            SubtractHp(subtractHp);
         }
         if (collision.CompareTag("Saw"))
         {
-            substractHp = 8;
+            subtractHp = GameController.instance.listDamages[collision.attachedRigidbody.gameObject];
             isTriggerSaw = true;
             while (isTriggerSaw && enemyInfo.hp > 0)
             {
-                SubstractHp(substractHp);
+                SubtractHp(subtractHp);
                 yield return new WaitForSeconds(GameController.instance.timeSawDamage);
             }
         }
         if (collision.CompareTag("Flame"))
         {
-            substractHp = 9;
+            subtractHp = GameController.instance.listDamages[collision.attachedRigidbody.gameObject];
             isTriggerFlame = true;
             while (isTriggerFlame && enemyInfo.hp > 0)
             {
-                SubstractHp(substractHp);
+                SubtractHp(subtractHp);
                 yield return new WaitForSeconds(GameController.instance.timeFlameDamage);
             }
         }
@@ -101,6 +101,8 @@ public class EnemyHandler : MonoBehaviour
         yield return new WaitForSeconds(time);
         isStunned = false;
     }
+
+    public bool a;
 
     protected virtual void OnCollisionStay2D(Collision2D collision)
     {
@@ -172,10 +174,9 @@ public class EnemyHandler : MonoBehaviour
         }
     }
 
-    public bool a;
-
     protected void Jump()
     {
+        if (a) Debug.LogWarning("ahsgdhjasdgahjdsg");
         MassChange(0.1f);
         rb.velocity = new Vector2(rb.velocity.x, forceJump);
         animator.SetFloat("velocityY", 0);
@@ -185,12 +186,12 @@ public class EnemyHandler : MonoBehaviour
     {
         //rb.mass = mass;
     }
-    void SubstractHp(float substractHp)
+    void SubtractHp(float subtractHp)
     {
         if (!healthBar.activeSelf) healthBar.SetActive(true);
-        float hp = enemyInfo.SubstractHp(substractHp);
-        healthHandler.SubstractHp(hp);
-        damage.ShowDamage(substractHp.ToString());
+        float hp = enemyInfo.SubtractHp(subtractHp);
+        healthHandler.SubtractHp(hp);
+        damage.ShowDamage(subtractHp.ToString());
 
         if (hp == 0) DeathHandle();
     }

@@ -30,7 +30,7 @@ public class EnemyController : MonoBehaviour
     public void Start()
     {
         milestone = amoutLimit;
-        spawnX = GameManager.instance.cam.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x + 1;
+        spawnX = GameController.instance.cam.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x + 1;
         RandomEs();
         SetPosition();
     }
