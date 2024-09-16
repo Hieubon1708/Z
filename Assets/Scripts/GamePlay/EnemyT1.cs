@@ -26,7 +26,7 @@ public class EnemyT1 : EnemyHandler
         base.OnCollisionStay2D(collision);
         if (isCollisionWithBump
             || isCollisionWithCar
-            || amoutCollision == 2
+            || amoutCollision >= 2
             && listNormals[0].y == 0
             && listNormals[1].y == 0) isWalk = false;
         else isWalk = true;

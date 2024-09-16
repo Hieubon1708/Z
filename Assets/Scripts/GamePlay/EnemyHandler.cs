@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ public class EnemyHandler : MonoBehaviour
     public float multiplier;
     public float speed;
     public float timeStunned;
+    public float timeJump;
     public Animator animator;
     public bool isCollisionWithCar;
     public bool isCollisionWithGround;
@@ -136,7 +138,8 @@ public class EnemyHandler : MonoBehaviour
             }
         }
 
-        if (amoutCollision == 1
+        if (!isJump 
+            && amoutCollision == 1
             && listNormals[0].x > 0.85f
             && Mathf.Abs(listCollisions[0].transform.position.y - transform.position.y) <= 0.1f
             && !isStunned
@@ -145,7 +148,7 @@ public class EnemyHandler : MonoBehaviour
         {
             animator.SetFloat("velocityY", 3);
             enemyCollisionToJump = collision.gameObject;
-            Jump();
+            StartCoroutine(Jump());
         }
 
         if (isCollisionWithCar
@@ -174,17 +177,19 @@ public class EnemyHandler : MonoBehaviour
         }
     }
 
-    protected void Jump()
+    protected IEnumerator Jump()
     {
-        if (a) Debug.LogWarning("ahsgdhjasdgahjdsg");
+        isJump = true;
         MassChange(0.1f);
         rb.velocity = new Vector2(rb.velocity.x, forceJump);
         animator.SetFloat("velocityY", 0);
+        yield return new WaitForSeconds(timeJump);
+        rb.velocity = new Vector2(rb.velocity.x, 0);
     }
 
     public void MassChange(float mass)
     {
-        //rb.mass = mass;
+        rb.mass = mass;
     }
     void SubtractHp(float subtractHp)
     {
