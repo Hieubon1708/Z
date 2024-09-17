@@ -17,6 +17,8 @@ public class EnemyController : MonoBehaviour
     public List<GameObject> listRandomEs;
     public float defaultDistance;
 
+    public List<List<Rigidbody2D>> listBumps = new List<List<Rigidbody2D>>();
+
     public int[] amoutEs;
     public float[] distances;
     public int[] startDistanceMultipliers;

@@ -17,6 +17,7 @@ public class GameController : MonoBehaviour
     public Dictionary<GameObject, int> listDamages = new Dictionary<GameObject, int>();
 
     public Transform poolDamages;
+    public Transform poolWeapons;
     public Transform poolBullets;
     public Transform poolEnemies;
 

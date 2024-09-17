@@ -26,12 +26,19 @@ public class EnemyHandler : MonoBehaviour
     public bool isWalk;
     public bool isStunned;
     public int amoutCollision;
+    public int lineIndex;
     public GameObject content;
     public GameObject enemyCollisionToJump;
     public List<GameObject> listCollisions = new List<GameObject>();
     public List<Vector2> listNormals = new List<Vector2>();
-    public ContactPoint2D[] listContacts = new ContactPoint2D[3];
+    public ContactPoint2D[] listContacts = new ContactPoint2D[10];
     Coroutine stunnedDelay;
+    Coroutine jump;
+
+    public void Start()
+    {
+        lineIndex = EUtils.GetIndexLine(gameObject);
+    }
 
     protected virtual void OnEnable()
     {
@@ -88,6 +95,16 @@ public class EnemyHandler : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground")) isCollisionWithGround = true;
         if (collision.gameObject.CompareTag("Bump")) isCollisionWithBump = true;
 
+        if (collision.gameObject.CompareTag("Car"))
+        {
+            EnemyTowerController.instance.scTowers[EnemyTowerController.instance.indexTower].listBumps[lineIndex - 1].Add(rb);
+        }
+        if (collision.gameObject.CompareTag("Enemy") && EnemyTowerController.instance.scTowers[EnemyTowerController.instance.indexTower].listBumps[lineIndex - 1].Contains(collision.rigidbody))
+        {
+            EnemyTowerController.instance.scTowers[EnemyTowerController.instance.indexTower].listBumps[lineIndex - 1].Add(rb);
+        }
+
+
         animator.SetFloat("velocityY", 0);
         if (collision.contacts[0].normal.y >= 0.85f)
         {
@@ -114,6 +131,12 @@ public class EnemyHandler : MonoBehaviour
             isStunned = true;
             timeStunned = Random.Range(0.75f, 1.15f);
 
+            if (jump != null)
+            {
+                StopCoroutine(jump);
+                isJump = false;
+            }
+
             if (stunnedDelay != null) StopCoroutine(stunnedDelay);
             stunnedDelay = StartCoroutine(SetFalseIsStunned(timeStunned));
 
@@ -138,30 +161,30 @@ public class EnemyHandler : MonoBehaviour
             }
         }
 
-        if (!isJump 
+        if (!isJump
             && amoutCollision == 1
             && listNormals[0].x > 0.85f
-            && Mathf.Abs(listCollisions[0].transform.position.y - transform.position.y) <= 0.1f
+            && Mathf.Abs(listCollisions[0].transform.position.y - transform.position.y) <= 0.01f
             && !isStunned
             && !isCollisionWithCar
             && !isCollisionWithBump)
         {
             animator.SetFloat("velocityY", 3);
             enemyCollisionToJump = collision.gameObject;
-            StartCoroutine(Jump());
+            jump = StartCoroutine(Jump());
         }
 
         if (isCollisionWithCar
             && isCollisionWithGround
             && collision.contacts[0].normal.y <= -0.85f)
         {
-            int index = EUtils.GetIndexLine(gameObject);
-            if (!CarController.instance.isBump[index - 1])
+            if (!CarController.instance.isBump[lineIndex - 1])
             {
-                StartCoroutine(CarController.instance.Bump(index, rb));
+                StartCoroutine(CarController.instance.Bump(lineIndex, rb));
             }
         }
     }
+
     public void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Car")) isCollisionWithCar = false;
@@ -175,15 +198,20 @@ public class EnemyHandler : MonoBehaviour
         {
             rb.velocity = new Vector2(speed * multiplier, rb.velocity.y);
         }
+        else
+        {
+            rb.velocity = new Vector2(0, rb.velocity.y);
+        }
     }
 
     protected IEnumerator Jump()
     {
+        if (!a) yield break;
         isJump = true;
         MassChange(0.1f);
         rb.velocity = new Vector2(rb.velocity.x, forceJump);
-        animator.SetFloat("velocityY", 0);
         yield return new WaitForSeconds(timeJump);
+        animator.SetFloat("velocityY", 0);
         rb.velocity = new Vector2(rb.velocity.x, 0);
     }
 
@@ -191,6 +219,7 @@ public class EnemyHandler : MonoBehaviour
     {
         rb.mass = mass;
     }
+
     void SubtractHp(float subtractHp)
     {
         if (!healthBar.activeSelf) healthBar.SetActive(true);

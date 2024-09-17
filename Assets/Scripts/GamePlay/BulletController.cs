@@ -21,11 +21,6 @@ public class BulletController : MonoBehaviour
         Generate();
     }
 
-    private void Start()
-    {
-
-    }
-
     void Generate()
     {
         listBullets = new GameObject[count];
