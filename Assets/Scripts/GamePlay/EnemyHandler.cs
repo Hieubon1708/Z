@@ -1,5 +1,4 @@
-﻿using DG.Tweening;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -34,10 +33,22 @@ public class EnemyHandler : MonoBehaviour
     public ContactPoint2D[] listContacts = new ContactPoint2D[10];
     Coroutine stunnedDelay;
     Coroutine jump;
+    Coroutine bump;
+    public GameObject frontalCollision;
 
     public void Start()
     {
         lineIndex = EUtils.GetIndexLine(gameObject);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.V) && a)
+        {
+            StartCoroutine(CarController.instance.Bump(lineIndex, rb, gameObject));
+
+
+        }
     }
 
     protected virtual void OnEnable()
@@ -95,15 +106,7 @@ public class EnemyHandler : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground")) isCollisionWithGround = true;
         if (collision.gameObject.CompareTag("Bump")) isCollisionWithBump = true;
 
-        if (collision.gameObject.CompareTag("Car"))
-        {
-            EnemyTowerController.instance.scTowers[EnemyTowerController.instance.indexTower].listBumps[lineIndex - 1].Add(rb);
-        }
-        if (collision.gameObject.CompareTag("Enemy") && EnemyTowerController.instance.scTowers[EnemyTowerController.instance.indexTower].listBumps[lineIndex - 1].Contains(collision.rigidbody))
-        {
-            EnemyTowerController.instance.scTowers[EnemyTowerController.instance.indexTower].listBumps[lineIndex - 1].Add(rb);
-        }
-
+        if (collision.gameObject.CompareTag("Enemy") && collision.contacts[0].normal.x >= 0.99f) frontalCollision = collision.gameObject;
 
         animator.SetFloat("velocityY", 0);
         if (collision.contacts[0].normal.y >= 0.85f)
@@ -125,6 +128,8 @@ public class EnemyHandler : MonoBehaviour
 
     protected virtual void OnCollisionStay2D(Collision2D collision)
     {
+        if (collision.gameObject.name.Contains("Bump") && isCollisionWithGround) name = "Bump";
+
         if (collision.contacts[0].normal.y < -0.05f && collision.gameObject != enemyCollisionToJump && collision.gameObject.CompareTag("Enemy"))
         {
             animator.SetFloat("velocityY", 0);
@@ -161,7 +166,7 @@ public class EnemyHandler : MonoBehaviour
             }
         }
 
-        if (!isJump
+        /*if (!isJump
             && amoutCollision == 1
             && listNormals[0].x > 0.85f
             && Mathf.Abs(listCollisions[0].transform.position.y - transform.position.y) <= 0.01f
@@ -172,7 +177,7 @@ public class EnemyHandler : MonoBehaviour
             animator.SetFloat("velocityY", 3);
             enemyCollisionToJump = collision.gameObject;
             jump = StartCoroutine(Jump());
-        }
+        }*/
 
         if (isCollisionWithCar
             && isCollisionWithGround
@@ -180,7 +185,7 @@ public class EnemyHandler : MonoBehaviour
         {
             if (!CarController.instance.isBump[lineIndex - 1])
             {
-                StartCoroutine(CarController.instance.Bump(lineIndex, rb));
+                StartCoroutine(CarController.instance.Bump(lineIndex, rb, collision.gameObject));
             }
         }
     }
@@ -190,17 +195,31 @@ public class EnemyHandler : MonoBehaviour
         if (collision.gameObject.CompareTag("Car")) isCollisionWithCar = false;
         if (collision.gameObject.CompareTag("Ground")) isCollisionWithGround = false;
         if (collision.gameObject.CompareTag("Bump")) isCollisionWithBump = false;
+        if (collision.gameObject.name.Contains("Bump") || collision.gameObject.CompareTag("Ground")) name = "E";
     }
 
     protected virtual void FixedUpdate()
     {
-        if (isWalk)
+        if (frontalCollision != null)
         {
-            rb.velocity = new Vector2(speed * multiplier, rb.velocity.y);
+            if (frontalCollision.name == "Bump" && isCollisionWithGround) name = "Bump";
+            else name = "E";
+        }
+
+        if (name.Contains("Bump"))
+        {
+            rb.velocity = new Vector2(2, rb.velocity.y);
         }
         else
         {
-            rb.velocity = new Vector2(0, rb.velocity.y);
+            if (isWalk)
+            {
+                rb.velocity = new Vector2(speed * multiplier, rb.velocity.y);
+            }
+            else
+            {
+                rb.velocity = new Vector2(0, rb.velocity.y);
+            }
         }
     }
 
