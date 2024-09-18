@@ -164,7 +164,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1.5
+  m_GravityScale: 1
   m_Material: {fileID: 6200000, guid: 2595aff55abec5a4e9b8cc331abdb49a, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
@@ -223,10 +223,12 @@ MonoBehaviour:
   healthHandler: {fileID: 3314828209548918623}
   damage: {fileID: 6848761701725225248}
   rb: {fileID: 6974357245472152430}
+  col: {fileID: 0}
   forceJump: 4.15
   multiplier: 1
   speed: -2
   timeStunned: 0
+  timeJump: 0
   animator: {fileID: 95584231476926666}
   isCollisionWithCar: 0
   isCollisionWithGround: 0
@@ -235,14 +237,14 @@ MonoBehaviour:
   isWalk: 0
   isStunned: 0
   amoutCollision: 0
+  lineIndex: 0
   content: {fileID: 1765375808991662}
   enemyCollisionToJump: {fileID: 0}
   listCollisions: []
   listNormals: []
+  frontalCollision: {fileID: 0}
   d: {fileID: 0}
-  v: {fileID: 3100199516901066794, guid: 7f511aaa37a758946a8f0b59dfa42271, type: 3}
   a: 0
-  b: 0
 --- !u!1 &1149635538329541
 GameObject:
   m_ObjectHideFlags: 0

@@ -40,19 +40,15 @@ public class CarController : MonoBehaviour
         carAni.SetTrigger("removeGameBlock");
     }
 
-    public IEnumerator Bump(int index, Rigidbody2D rb, GameObject ePushed)
+    public IEnumerator Bump(int index, GameObject ePushed, string nameOrigin)
     {
-        /*isBump[index - 1] = true;
-        int indexEnemyLine = LayerMask.NameToLayer("Bump_" + index);
-        bumpCols[index - 1].gameObject.SetActive(true);
-        rb.excludeLayers &= ~(1 << indexEnemyLine);
-        yield return new WaitForSeconds(0.55f);
-        rb.excludeLayers |= 1 << indexEnemyLine;
-        bumpCols[index - 1].gameObject.SetActive(false);
-        bumpCols[index - 1].transform.localPosition = Vector2.zero;
-        isBump[index - 1] = false;*/
-        yield return new WaitForSeconds(1f);
-        ePushed.name = "E";
+        ePushed.name = "Bump";
+        Debug.LogWarning("Start");
+        isBump[index - 1] = true;
+        yield return new WaitForSeconds(0.3f);
+        Debug.LogWarning("End");
+        isBump[index - 1] = false;
+        ePushed.name = nameOrigin;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

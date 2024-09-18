@@ -13,6 +13,13 @@ public class DataManager : MonoBehaviour
     public Sprite[] blockSpritesLv4;
     public Sprite[] blockSpritesLv5;
     public Sprite[] blockSpritesLv6;
+    
+    public Sprite[] carSpritesLv1;
+    public Sprite[] carSpritesLv2;
+    public Sprite[] carSpritesLv3;
+    public Sprite[] carSpritesLv4;
+    public Sprite[] carSpritesLv5;
+    public Sprite[] carSpritesLv6;
 
     public Sprite[] blockSprites;
 

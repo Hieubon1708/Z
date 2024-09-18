@@ -29,9 +29,7 @@ public class EnemyT2 : EnemyHandler
     protected override void OnCollisionStay2D(Collision2D collision)
     {
         base.OnCollisionStay2D(collision);
-        if (isJump
-            || isCollisionWithBump
-            || isCollisionWithCar) isWalk = false;
+        if (isJump || isCollisionWithCar) isWalk = false;
         if (enemyInfo.transform.position.x <= targetX
             && isCollisionWithGround)
         {

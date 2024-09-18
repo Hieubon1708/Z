@@ -573,10 +573,10 @@ MonoBehaviour:
   - {fileID: 6468478039744720405}
   - {fileID: 2881456623302554004}
   - {fileID: 514162525848653926}
-  amoutLimit: 3
+  amoutLimit: 2
   enemies:
   - {fileID: 3440869563518828017, guid: c46c28b844822c7419b085415db0c442, type: 3}
-  amout: 0a000000
+  amout: 03000000
   speed:
   - -2
   listRandomEs: []

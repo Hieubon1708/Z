@@ -9,7 +9,8 @@ public class EnemyHandler : MonoBehaviour
     public HealthHandler healthHandler;
     public Damage damage;
     public Rigidbody2D rb;
-    public GameObject col;
+    public GameObject colObj;
+    public CapsuleCollider2D col;
     bool isTriggerSaw;
     bool isTriggerFlame;
     public float forceJump;
@@ -20,36 +21,44 @@ public class EnemyHandler : MonoBehaviour
     public Animator animator;
     public bool isCollisionWithCar;
     public bool isCollisionWithGround;
-    public bool isCollisionWithBump;
     public bool isJump;
     public bool isWalk;
     public bool isStunned;
     public int amoutCollision;
     public int lineIndex;
+    public LayerMask layerJumping;
+    public LayerMask layerDoneJumping;
     public GameObject content;
-    public GameObject enemyCollisionToJump;
+    public GameObject eCollisionFStunned;
+    public GameObject eCollisionFJump;
     public List<GameObject> listCollisions = new List<GameObject>();
     public List<Vector2> listNormals = new List<Vector2>();
     public ContactPoint2D[] listContacts = new ContactPoint2D[10];
     Coroutine stunnedDelay;
-    Coroutine jump;
-    Coroutine bump;
     public GameObject frontalCollision;
+    string nameOrigin;
 
     public void Start()
     {
+        //Time.timeScale = 0.5f;
         lineIndex = EUtils.GetIndexLine(gameObject);
+        nameOrigin = gameObject.name;
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.V) && a)
         {
-            StartCoroutine(CarController.instance.Bump(lineIndex, rb, gameObject));
-
-
+            StartCoroutine(CarController.instance.Bump(lineIndex, gameObject, nameOrigin));
+        }
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            animator.SetFloat("velocityY", 3);
+            eCollisionFStunned = frontalCollision;
+            Jump();
         }
     }
+    public bool b;
 
     protected virtual void OnEnable()
     {
@@ -104,51 +113,72 @@ public class EnemyHandler : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Car")) isCollisionWithCar = true;
         if (collision.gameObject.CompareTag("Ground")) isCollisionWithGround = true;
-        if (collision.gameObject.CompareTag("Bump")) isCollisionWithBump = true;
-
-        if (collision.gameObject.CompareTag("Enemy") && collision.contacts[0].normal.x >= 0.99f) frontalCollision = collision.gameObject;
-
-        animator.SetFloat("velocityY", 0);
-        if (collision.contacts[0].normal.y >= 0.85f)
+        if (collision.gameObject.CompareTag("Enemy"))
         {
-            isJump = false;
-            MassChange(1);
+            if (collision.contacts[0].normal.y <= 0f && collision.gameObject != eCollisionFStunned)
+            {
+                if (isJump) JumpEnd();
+
+                isStunned = true;
+                timeStunned = Random.Range(0.35f, 0.55f);
+
+                if (stunnedDelay != null) StopCoroutine(stunnedDelay);
+                stunnedDelay = StartCoroutine(SetFalseIsStunned(timeStunned));
+            }
+
+            if (isJump && !isCollisionWithGround)
+            {
+                //Debug.LogWarning(collision.gameObject);
+                if (collision.contacts[0].normal.y >= 0.85f)
+                {
+                    JumpEnd();
+                }
+            }
         }
     }
 
     public GameObject d;
-
-    IEnumerator SetFalseIsStunned(float time)
-    {
-        yield return new WaitForSeconds(time);
-        isStunned = false;
-    }
-
     public bool a;
 
     protected virtual void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.name.Contains("Bump") && isCollisionWithGround) name = "Bump";
+        if (collision.contacts[0].normal.x >= 0.85f && collision.gameObject.CompareTag("Enemy")) frontalCollision = collision.gameObject;
+        if (frontalCollision != null && frontalCollision.name.Contains("Bump")) name = nameOrigin + "Bump";
 
-        if (collision.contacts[0].normal.y < -0.05f && collision.gameObject != enemyCollisionToJump && collision.gameObject.CompareTag("Enemy"))
+        GetContacts();
+        CheckJump();
+        CheckBump(collision.contacts[0].normal.y);
+    }
+
+    public void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Car")) isCollisionWithCar = false;
+        if (collision.gameObject.CompareTag("Ground")) isCollisionWithGround = false;
+        if (collision.gameObject == frontalCollision)
         {
-            animator.SetFloat("velocityY", 0);
-            isStunned = true;
-            timeStunned = Random.Range(0.75f, 1.15f);
-
-            if (jump != null)
-            {
-                StopCoroutine(jump);
-                isJump = false;
-            }
-
-            if (stunnedDelay != null) StopCoroutine(stunnedDelay);
-            stunnedDelay = StartCoroutine(SetFalseIsStunned(timeStunned));
-
-            rb.velocity = Vector2.zero;
-            MassChange(1);
+            name = nameOrigin;
+            frontalCollision = null;
         }
+        if (collision.gameObject == eCollisionFJump) eCollisionFJump = null;
+    }
 
+    void CheckJump()
+    {
+        if (!isJump
+            && amoutCollision == 1
+            && listNormals[0].x >= 0.99f
+            && Mathf.Abs(listCollisions[0].transform.position.y - transform.position.y) <= 0.01f
+            && !isStunned
+            && !isCollisionWithCar)
+        {
+            eCollisionFStunned = listCollisions[0];
+            eCollisionFJump = listCollisions[0];
+            Jump();
+        }
+    }
+
+    void GetContacts()
+    {
         amoutCollision = 0;
         int length = rb.GetContacts(listContacts);
         listCollisions.Clear();
@@ -165,78 +195,67 @@ public class EnemyHandler : MonoBehaviour
                 amoutCollision++;
             }
         }
-
-        /*if (!isJump
-            && amoutCollision == 1
-            && listNormals[0].x > 0.85f
-            && Mathf.Abs(listCollisions[0].transform.position.y - transform.position.y) <= 0.01f
-            && !isStunned
-            && !isCollisionWithCar
-            && !isCollisionWithBump)
-        {
-            animator.SetFloat("velocityY", 3);
-            enemyCollisionToJump = collision.gameObject;
-            jump = StartCoroutine(Jump());
-        }*/
-
-        if (isCollisionWithCar
-            && isCollisionWithGround
-            && collision.contacts[0].normal.y <= -0.85f)
-        {
-            if (!CarController.instance.isBump[lineIndex - 1])
-            {
-                StartCoroutine(CarController.instance.Bump(lineIndex, rb, collision.gameObject));
-            }
-        }
     }
 
-    public void OnCollisionExit2D(Collision2D collision)
+    void CheckBump(float normalY)
     {
-        if (collision.gameObject.CompareTag("Car")) isCollisionWithCar = false;
-        if (collision.gameObject.CompareTag("Ground")) isCollisionWithGround = false;
-        if (collision.gameObject.CompareTag("Bump")) isCollisionWithBump = false;
-        if (collision.gameObject.name.Contains("Bump") || collision.gameObject.CompareTag("Ground")) name = "E";
+        if (isCollisionWithCar
+            && isCollisionWithGround
+            && normalY <= -0.99f
+            && !CarController.instance.isBump[lineIndex - 1])
+        {
+            StartCoroutine(CarController.instance.Bump(lineIndex, gameObject, nameOrigin));
+        }
     }
 
     protected virtual void FixedUpdate()
     {
         if (frontalCollision != null)
         {
-            if (frontalCollision.name == "Bump" && isCollisionWithGround) name = "Bump";
-            else name = "E";
+            if (frontalCollision.name.Contains("Bump") && isCollisionWithGround) name = nameOrigin + "Bump";
+            else name = nameOrigin;
         }
-
         if (name.Contains("Bump"))
         {
             rb.velocity = new Vector2(2, rb.velocity.y);
         }
+        else if (isCollisionWithCar
+            || amoutCollision >= 2
+            || isStunned
+            || (isJump && eCollisionFJump != null))
+        {
+            isWalk = false;
+            rb.velocity = new Vector2(0f, rb.velocity.y);
+        }
         else
         {
-            if (isWalk)
-            {
-                rb.velocity = new Vector2(speed * multiplier, rb.velocity.y);
-            }
-            else
-            {
-                rb.velocity = new Vector2(0, rb.velocity.y);
-            }
+            isWalk =true;
+            rb.velocity = new Vector2(speed * multiplier, rb.velocity.y);
         }
     }
 
-    protected IEnumerator Jump()
+    protected void Jump()
     {
-        if (!a) yield break;
+        Debug.Log("-------");
+        Debug.Log("JumpStart " + name);
         isJump = true;
-        MassChange(0.1f);
+        animator.SetFloat("velocityY", 3);
+        ForceSendLayerChange(true);
         rb.velocity = new Vector2(rb.velocity.x, forceJump);
-        yield return new WaitForSeconds(timeJump);
-        animator.SetFloat("velocityY", 0);
-        rb.velocity = new Vector2(rb.velocity.x, 0);
     }
 
-    public void MassChange(float mass)
+    void JumpEnd()
     {
-        rb.mass = mass;
+        Debug.Log("JumpEnd " + name);
+        isJump = false;
+        animator.SetFloat("velocityY", 0);
+        ForceSendLayerChange(false);
+        rb.velocity = Vector2.zero;
+    }
+
+    public void ForceSendLayerChange(bool isJump)
+    {
+        col.forceSendLayers = isJump ? layerJumping : layerDoneJumping;
     }
 
     void SubtractHp(float subtractHp)
@@ -258,14 +277,20 @@ public class EnemyHandler : MonoBehaviour
         EnemyTowerController.instance.scTowers[EnemyTowerController.instance.indexTower].ERevival(enemyInfo.gameObject);
     }
 
-    public void OnDestroy()
+    public void OnDisable()
     {
-        isCollisionWithBump = false;
         isCollisionWithCar = false;
         isCollisionWithGround = false;
         isStunned = false;
         isTriggerFlame = false;
         isTriggerSaw = false;
         isWalk = false;
+        isJump = false;
+        frontalCollision = null;
+    }
+    IEnumerator SetFalseIsStunned(float time)
+    {
+        yield return new WaitForSeconds(time);
+        isStunned = false;
     }
 }

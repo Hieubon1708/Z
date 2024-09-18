@@ -143,6 +143,7 @@ public class EnemyController : MonoBehaviour
             spawnX += randomDistance * distance;
 
             GameObject e = listRandomEs[count];
+            e.name = count.ToString();
             EnemyHandler scE = e.GetComponent<EnemyHandler>();
             e.transform.SetParent(enemyPools[randomLine]);
 
@@ -161,7 +162,7 @@ public class EnemyController : MonoBehaviour
             e.transform.position = new Vector2(spawnX, y);
 
             SetLayer(randomLine, listRandomEs[count]);
-            SetLayer(randomLine, scE.col);
+            SetLayer(randomLine, scE.colObj);
 
             e.GetComponent<SortingGroup>().sortingLayerName = "Line_" + indexLine;
             scE.rb.excludeLayers |= (randomLine == 0 ? 0 : 1 << 9) | (randomLine == 1 ? 0 : 1 << 10) | (randomLine == 2 ? 0 : 1 << 11) | (randomLine == 0 ? 0 : 1 << 6) | (randomLine == 1 ? 0 : 1 << 7) | (randomLine == 2 ? 0 : 1 << 8); ;

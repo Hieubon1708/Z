@@ -24,10 +24,6 @@ public class EnemyT1 : EnemyHandler
     protected override void OnCollisionStay2D(Collision2D collision)
     {
         base.OnCollisionStay2D(collision);
-        if (isCollisionWithBump
-            || isCollisionWithCar
-            || amoutCollision >= 2) isWalk = false;
-        else isWalk = true;
     }
 
     protected override void FixedUpdate()
