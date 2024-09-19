@@ -142,8 +142,7 @@ public class EnemyHandler : MonoBehaviour
 
     protected virtual void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.contacts[0].normal.x >= 0.85f && collision.gameObject.CompareTag("Enemy")) frontalCollision = collision.gameObject;
-        if (frontalCollision != null && frontalCollision.name.Contains("Bump")) name = nameOrigin + "Bump";
+        if (collision.contacts[0].normal.x >= 0.99f && collision.gameObject.CompareTag("Enemy")) frontalCollision = collision.gameObject;
 
         GetContacts();
         CheckJump();
@@ -204,7 +203,7 @@ public class EnemyHandler : MonoBehaviour
             && normalY <= -0.99f
             && !CarController.instance.isBump[lineIndex - 1])
         {
-            StartCoroutine(CarController.instance.Bump(lineIndex, gameObject, nameOrigin));
+            StartCoroutine(CarController.instance.Bump(lineIndex - 1, gameObject, nameOrigin));
         }
     }
 
@@ -212,12 +211,16 @@ public class EnemyHandler : MonoBehaviour
     {
         if (frontalCollision != null)
         {
-            if (frontalCollision.name.Contains("Bump") && isCollisionWithGround) name = nameOrigin + "Bump";
-            else name = nameOrigin;
-        }
-        if (name.Contains("Bump"))
-        {
-            rb.velocity = new Vector2(2, rb.velocity.y);
+            if (frontalCollision.name.Contains("Bump") && isCollisionWithGround)
+            {
+                name = nameOrigin + "Bump";
+                transform.SetParent(CarController.instance.lineBumps[lineIndex - 1]);
+            }
+            else
+            {
+                name = nameOrigin;
+                transform.SetParent(EnemyTowerController.instance.scTowers[EnemyTowerController.instance.indexTower].enemyPools[lineIndex - 1]);
+            }
         }
         else if (isCollisionWithCar
             || amoutCollision >= 2
@@ -229,7 +232,7 @@ public class EnemyHandler : MonoBehaviour
         }
         else
         {
-            isWalk =true;
+            isWalk = true;
             rb.velocity = new Vector2(speed * multiplier, rb.velocity.y);
         }
     }

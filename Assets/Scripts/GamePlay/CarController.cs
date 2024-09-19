@@ -7,7 +7,8 @@ public class CarController : MonoBehaviour
 
     public Animator carAni;
     public AreaEffector2D effector;
-    public Rigidbody2D[] bumpCols;
+    public int[] layerLineBumps;
+    public Transform[] lineBumps;
     public bool[] isBump;
     public float backgroundSpeed;
     public int amoutCollison = 3;
@@ -42,13 +43,25 @@ public class CarController : MonoBehaviour
 
     public IEnumerator Bump(int index, GameObject ePushed, string nameOrigin)
     {
-        ePushed.name = "Bump";
-        Debug.LogWarning("Start");
+        /*ePushed.name = "Bump";
         isBump[index - 1] = true;
+        int indexEnemyLine = LayerMask.NameToLayer("Bump_" + index);
         yield return new WaitForSeconds(0.3f);
-        Debug.LogWarning("End");
         isBump[index - 1] = false;
+        ePushed.name = nameOrigin;*/
+
+        ePushed.name = "Bump";
+        isBump[index] = true;
+        Debug.LogWarning("Start");
+        ePushed.transform.SetParent(CarController.instance.lineBumps[index]);
+        effector.colliderMask |= 1 << layerLineBumps[index];
+        yield return new WaitForSeconds(0.3f);
+        effector.colliderMask &= ~(1 << layerLineBumps[index]);
+        lineBumps[index].transform.localPosition = new Vector2(0, lineBumps[index].transform.localPosition.y);
+        isBump[index] = false;
+        ePushed.transform.SetParent(EnemyTowerController.instance.scTowers[EnemyTowerController.instance.indexTower].enemyPools[index]);
         ePushed.name = nameOrigin;
+        Debug.LogWarning("End");
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
